@@ -1,0 +1,13 @@
+name = "VPopMIP"
+uuid = "7eca7bcc-9451-40d0-a897-5ef4a75126a7"
+authors = ["Evgeny Metelkin metelkin@insysbio.com", "Ivan Borisov borisov@insysbio.com"]
+version = "1.0.0-DEV"
+
+[compat]
+julia = "1.10"
+
+[extras]
+Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
+
+[targets]
+test = ["Test"]
