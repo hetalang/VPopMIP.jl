@@ -1,6 +1,6 @@
 using VPopMIP
 using Test
 
-@testset "VPopMIP.jl" begin
-    # Write your tests here.
+@testset "Loading Virtual Population" begin
+  include("test_load_vpop.jl")
 end
