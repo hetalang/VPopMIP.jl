@@ -45,6 +45,7 @@ function load_vpop(pop::DataFrame; endpoints=nothing)
   if isnothing(endpoints) 
     epts = names(pop, Not([VPID_COL, SCENARIO_COL]))
   else
+    epts = endpoints
     for ept in endpoints
       !hasproperty(pop, ept) && throw(ArgumentError("Endpoint column '$ept' not found in the Virtual Population table."))
     end
