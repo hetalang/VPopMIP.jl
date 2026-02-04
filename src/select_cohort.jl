@@ -31,7 +31,12 @@ function solve_mip_prob(prob, pop;
 
   if JuMP.termination_status(prob) == MathOptInterface.OPTIMAL
     idxs = round.(Int, JuMP.value.(prob[:x]))
-    return VirtualPopulation(DataFrame(pop)[Bool.(idxs),:], endpoints(pop), scenarios(pop), sum(idxs), pop.preselected)
+
+    grdf = groupby(DataFrame(pop), SCENARIO_COL)
+    df_cohort = combine(grdf) do g
+      g[Bool.(idxs), :]
+    end
+    return VirtualPopulation(df_cohort, endpoints(pop), scenarios(pop), sum(idxs), pop.preselected)
   else 
     println("No solution found. Check your setup or choose a different Virtual Population size `vpnum`.")
     return nothing
@@ -66,7 +71,8 @@ function build_mip_prob(pop, data, vpnum)
     has_scenario(pop, scn) || throw(ArgumentError("Scenario '$scn' not found in the Virtual Population."))
     has_endpoint(pop, ept) || throw(ArgumentError("Endpoint '$ept' not found in the Virtual Population."))
     
-    obj_exp = DigiPopData.mismatch_expression(Vector(grpop[(scn,)][!, ept]), metric, x, vpnum)
+    obj_exp = DigiPopData.add_mismatch_expression!(prob, Vector(grpop[(scn,)][!, ept]), metric, x, vpnum)
+
     @constraint(prob, z_ept[j] == obj_exp)
   end
 
