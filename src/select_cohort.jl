@@ -36,6 +36,7 @@ function solve_mip_prob(prob, pop;
     df_cohort = combine(grdf) do g
       g[Bool.(idxs), :]
     end
+    @info "Optimal solution found with $(sum(idxs)) VPs selected. Objective value: $(JuMP.objective_value(prob))."
     return VirtualPopulation(df_cohort, endpoints(pop), scenarios(pop), sum(idxs), pop.preselected)
   else 
     println("No solution found. Check your setup or choose a different Virtual Population size `vpnum`.")
