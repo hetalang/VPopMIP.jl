@@ -18,6 +18,7 @@ struct VirtualPopulation{D,E,SC,S}
   scenarios::SC
   npop::Int64
   preselected::S
+  objective_value::Union{Nothing,Float64} # objective value of the optimization problem for the selected cohort, if available
 end
 
 Base.show(io::IO, mime::MIME"text/plain", vpop::VirtualPopulation) =
@@ -32,6 +33,7 @@ scenarios(vpop::VirtualPopulation) = vpop.scenarios
 has_endpoint(vpop::VirtualPopulation, ep) = ep in endpoints(vpop)
 has_scenario(vpop::VirtualPopulation, scn) = scn in scenarios(vpop)
 has_preselected(vpop::VirtualPopulation) = !isnothing(vpop.preselected)
+objective_value(vpop::VirtualPopulation) = vpop.objective_value
 
 """
     load_vpop(pop::DataFrame) -> VirtualPopulation
@@ -54,7 +56,7 @@ function load_vpop(pop::DataFrame; endpoints=nothing)
   @info "Loading Virtual Population."
   npop = length(unique(pop[!,VPID_COL]))
   scenarios = unique(pop[!,SCENARIO_COL])
-  preselected = nothing # no pre-selection by default
+  preselected = hasproperty(pop, PRESELECTED_COL) ? Bool.(pop[!,PRESELECTED_COL]) : nothing # no pre-selection by default
 
-  return VirtualPopulation(pop, epts, scenarios, npop, preselected)
+  return VirtualPopulation(pop, epts, scenarios, npop, preselected, nothing)
 end

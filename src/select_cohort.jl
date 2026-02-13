@@ -36,8 +36,7 @@ function solve_mip_prob(prob, pop;
     df_cohort = combine(grdf) do g
       g[Bool.(idxs), :]
     end
-    @info "Optimal solution found with $(sum(idxs)) VPs selected. Objective value: $(JuMP.objective_value(prob))."
-    return VirtualPopulation(df_cohort, endpoints(pop), scenarios(pop), sum(idxs), pop.preselected)
+    return VirtualPopulation(df_cohort, endpoints(pop), scenarios(pop), sum(idxs), pop.preselected, JuMP.objective_value(prob))
   else 
     println("No solution found. Check your setup or choose a different Virtual Population size `vpnum`.")
     return nothing
@@ -59,7 +58,8 @@ function build_mip_prob(pop, data, vpnum)
   @constraint(prob, sum(x[i] for i in 1:popnum) == vpnum)
 
   # preselected VPs
-  if has_preselected(pop) && sum(pop.preselected) > 0
+  if has_preselected(pop)
+    !(0 < sum(pop.preselected) <= vpnum) && throw(ArgumentError("Number of pre-selected VP must be in the interval (0, $(vpnum)]."))
     preselected_ids = findall(pop.preselected)
     @constraint(prob, [i = preselected_ids], x[i] == 1)
   end
