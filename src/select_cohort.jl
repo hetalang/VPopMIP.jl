@@ -14,7 +14,7 @@ function select_cohort(pop::VirtualPopulation, data::Vector{M}, vpnum::Int; kwar
 end
 
 function solve_mip_prob(prob, pop; 
-  optimizer = SCIP.Optimizer, multialg = nothing, scip_limits_gap = 0.0)
+  optimizer = SCIP.Optimizer, multialg = nothing, scip_limits_gap = 0.0, time_limit = 1e20)
 
   if isnothing(multialg)
     JuMP.set_optimizer(prob, optimizer)
@@ -25,6 +25,7 @@ function solve_mip_prob(prob, pop;
 
   if optimizer == SCIP.Optimizer 
     JuMP.set_attribute(prob, "limits/gap", scip_limits_gap)
+    JuMP.set_attribute(prob, "limits/time", time_limit)
   end
 
   JuMP.optimize!(prob)
