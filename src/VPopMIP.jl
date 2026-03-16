@@ -8,6 +8,7 @@ using JuMP, MathOptInterface, SCIP
 const VPID_COL = "id"
 const SCENARIO_COL = "scenario"
 const PRESELECTED_COL = "preselected"
+const VPINCLUDE_COL = "include"
 
 include("load_vpop.jl")
 include("select_cohort.jl")

@@ -72,8 +72,16 @@ function build_mip_prob(pop, data, vpnum)
     metric = mb.metric
     has_scenario(pop, scn) || throw(ArgumentError("Scenario '$scn' not found in the Virtual Population."))
     has_endpoint(pop, ept) || throw(ArgumentError("Endpoint '$ept' not found in the Virtual Population."))
-    
-    obj_exp = DigiPopData.add_mismatch_expression!(prob, Vector(grpop[(scn,)][!, ept]), metric, x, vpnum)
+
+    if has_vp_include(pop) 
+      include_vp = Bool.(Vector(grpop[(scn,)][!, VPINCLUDE_COL]))
+      sim = float.(Vector(grpop[(scn,)][include_vp, ept]))      
+      X = x[include_vp]
+    else
+      sim = float.(Vector(grpop[(scn,)][!, ept]))
+      X = x 
+    end
+    obj_exp = DigiPopData.add_mismatch_expression!(prob, sim, metric, X, vpnum)
 
     @constraint(prob, z_ept[j] == obj_exp)
   end
