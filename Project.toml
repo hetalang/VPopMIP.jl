@@ -1,7 +1,7 @@
 name = "VPopMIP"
 uuid = "7eca7bcc-9451-40d0-a897-5ef4a75126a7"
-authors = ["Evgeny Metelkin metelkin@insysbio.com", "Ivan Borisov borisov@insysbio.com"]
 version = "1.0.0-DEV"
+authors = ["Evgeny Metelkin metelkin@insysbio.com", "Ivan Borisov borisov@insysbio.com"]
 
 [deps]
 DataFrames = "a93c6f00-e57d-5684-b7b6-d8193f3e46c0"
@@ -15,7 +15,7 @@ StatsBase = "2913bbd2-ae8a-5f71-8c99-4fb6c76f3a91"
 
 [compat]
 DataFrames = "1.8.1"
-DigiPopData = "0.2.0"
+DigiPopData = "0.2.0, 0.1"
 JuMP = "1.29.3"
 MathOptInterface = "1.48.0"
 RecipesBase = "1.3.4"
