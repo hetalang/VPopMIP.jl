@@ -75,7 +75,7 @@ function build_mip_prob(pop, data, vpnum)
 
     if has_vp_include(pop) 
       include_vp = Bool.(Vector(grpop[(scn,)][!, VPINCLUDE_COL]))
-      sim = float.(Vector(grpop[(scn,)][include_vp, ept]))      
+      sim = Vector(grpop[(scn,)][include_vp, ept])    
       X = x[include_vp]
     else
       sim = float.(Vector(grpop[(scn,)][!, ept]))
