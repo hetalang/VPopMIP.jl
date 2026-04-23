@@ -13,3 +13,7 @@ makedocs(
         "API" => "api.md",
     ],
 )
+
+deploydocs(
+    repo   = "github.com/hetalang/VPopMIP.jl.git"
+)
