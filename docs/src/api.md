@@ -3,7 +3,7 @@
 ## Main entry points
 
 ```@docs
-VirtualPopulation
+VPopMIP.VirtualPopulation
 load_vpop
 select_cohort
 statistics_summary
