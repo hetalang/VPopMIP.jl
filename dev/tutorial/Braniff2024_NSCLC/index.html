@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>A non-small cell lung cancer (NSCLC) model · VPopMIP.jl</title><meta name="title" content="A non-small cell lung cancer (NSCLC) model · VPopMIP.jl"/><meta property="og:title" content="A non-small cell lung cancer (NSCLC) model · VPopMIP.jl"/><meta property="twitter:title" content="A non-small cell lung cancer (NSCLC) model · VPopMIP.jl"/><meta name="description" content="Documentation for VPopMIP.jl."/><meta property="og:description" content="Documentation for VPopMIP.jl."/><meta property="twitter:description" content="Documentation for VPopMIP.jl."/><script data-outdated-warner src="../../assets/warner.js"></script><link href="https://cdnjs.cloudflare.com/ajax/libs/lato-font/3.0.0/css/lato-font.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/juliamono/0.050/juliamono.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/fontawesome.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/solid.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/brands.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.8/katex.min.css" rel="stylesheet" type="text/css"/><script>documenterBaseURL="../.."</script><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" data-main="../../assets/documenter.js"></script><script src="../../search_index.js"></script><script src="../../siteinfo.js"></script><script src="../../../versions.js"></script><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../assets/themes/catppuccin-mocha.css" data-theme-name="catppuccin-mocha"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../assets/themes/catppuccin-macchiato.css" data-theme-name="catppuccin-macchiato"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../assets/themes/catppuccin-frappe.css" data-theme-name="catppuccin-frappe"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../assets/themes/catppuccin-latte.css" data-theme-name="catppuccin-latte"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../assets/themes/documenter-dark.css" data-theme-name="documenter-dark" data-theme-primary-dark/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../assets/themes/documenter-light.css" data-theme-name="documenter-light" data-theme-primary/><script src="../../assets/themeswap.js"></script></head><body><div id="documenter"><nav class="docs-sidebar"><div class="docs-package-name"><span class="docs-autofit"><a href="../../">VPopMIP.jl</a></span></div><button class="docs-search-query input is-rounded is-small is-clickable my-2 mx-auto py-1 px-2" id="documenter-search-query">Search docs (Ctrl + /)</button><ul class="docs-menu"><li><a class="tocitem" href="../../">Home</a></li><li><span class="tocitem">Tutorial</span><ul><li class="is-active"><a class="tocitem" href>A non-small cell lung cancer (NSCLC) model</a></li></ul></li><li><a class="tocitem" href="../../api/">API</a></li></ul><div class="docs-version-selector field has-addons"><div class="control"><span class="docs-label button is-static is-size-7">Version</span></div><div class="docs-selector control is-expanded"><div class="select is-fullwidth is-size-7"><select id="documenter-version-selector"></select></div></div></div></nav><div class="docs-main"><header class="docs-navbar"><a class="docs-sidebar-button docs-navbar-link fa-solid fa-bars is-hidden-desktop" id="documenter-sidebar-button" href="#"></a><nav class="breadcrumb"><ul class="is-hidden-mobile"><li><a class="is-disabled">Tutorial</a></li><li class="is-active"><a href>A non-small cell lung cancer (NSCLC) model</a></li></ul><ul class="is-hidden-tablet"><li class="is-active"><a href>A non-small cell lung cancer (NSCLC) model</a></li></ul></nav><div class="docs-right"><a class="docs-navbar-link" href="https://github.com/hetalang/VPopMIP.jl" title="View the repository on GitHub"><span class="docs-icon fa-brands"></span><span class="docs-label is-hidden-touch">GitHub</span></a><a class="docs-navbar-link" href="https://github.com/hetalang/VPopMIP.jl/blob/master/docs/src/tutorial/Braniff2024_NSCLC.md" title="Edit source on GitHub"><span class="docs-icon fa-solid"></span></a><a class="docs-settings-button docs-navbar-link fa-solid fa-gear" id="documenter-settings-button" href="#" title="Settings"></a><a class="docs-article-toggle-button fa-solid fa-chevron-up" id="documenter-article-toggle-button" href="javascript:;" title="Collapse all docstrings"></a></div></header><article class="content" id="documenter-page"><h1 id="A-non-small-cell-lung-cancer-(NSCLC)-model"><a class="docs-heading-anchor" href="#A-non-small-cell-lung-cancer-(NSCLC)-model">A non-small cell lung cancer (NSCLC) model</a><a id="A-non-small-cell-lung-cancer-(NSCLC)-model-1"></a><a class="docs-heading-anchor-permalink" href="#A-non-small-cell-lung-cancer-(NSCLC)-model" title="Permalink"></a></h1><p>A non-small cell lung cancer (NSCLC) model [2] is used to demonstrate the VPopMIP approach. A set of 1000 plausible patients was generated using scripts provided in the supplementary materials of [2]. In the original study, individual patient data were used for VPop selection, including three endpoints for 112 patients across two treatment regimens (“drug” and “placebo”). To demonstrate applicability of the proposed method to more realistic settings, we converted individual-level data into summary statistics:</p><ul><li>SLD_baseline: mean and std of baseline tumor size (sum of longest diameters)</li><li>best_dSLD: 25th, 50th, 75th percentiles of the best percentage change in SLD</li><li>PFS: progression free survival data</li></ul><p>First, we load the simulated plausible population and use the <code>load_vpop</code> function to select the columns in the plausible patient table that correspond to clinically reported endpoints.</p><pre><code class="language-julia hljs">using VPopMIP, CSV, DataFrames, Plots, StatsBase, StatsPlots
+
+ppopdf = CSV.read(&quot;../../../models/Braniff2024/ppopdf1000.csv&quot;, DataFrame)
+ppop = load_vpop(ppopdf1000; endpoints=[&quot;best_dSLD&quot;, &quot;time_to_best&quot;, &quot;time_to_pfs&quot;, &quot;SLD_baseline&quot;])</code></pre><p>Next, we load clinical data (individual patient data for the <em>drug</em> and <em>placebo</em> regimens) and convert it into summary statistics using predefined metrics available in <a href="https://hetalang.github.io/DigiPopData.jl/dev/">DigiPopData</a>, to represent a more realistic scenario.</p><pre><code class="language-julia hljs"># Experimental cohort
+exp_placebo = CSV.read(&quot;../../../models/Braniff2024/synthetic_cohort_placebo.csv&quot;, DataFrame)
+exp_drug = CSV.read(&quot;../../../models/Braniff2024/synthetic_cohort_drug.csv&quot;, DataFrame)
+expdf = vcat(exp_placebo, exp_drug)
+
+# size of cohort (assuming the same for drug and placebo)
+drug_cohort_size = nrow(exp_placebo)
+
+# SLD baseline mean/sd
+sld_baseline_placebo = MeanSDMetric(drug_cohort_size, mean(exp_placebo.SLD_baseline), std(exp_placebo.SLD_baseline))
+sld_baseline_drug = MeanSDMetric(drug_cohort_size, mean(exp_drug.SLD_baseline), std(exp_drug.SLD_baseline))
+
+# SLD median/minmax
+best_sld_placebo = QuantileMetric(drug_cohort_size, [0.25, 0.5, 0.75], quantile(exp_placebo.best_dSLD, [0.25, 0.5, 0.75]))
+best_sld_drug = QuantileMetric(drug_cohort_size, [0.25, 0.5, 0.75], quantile(exp_drug.best_dSLD, [0.25, 0.5, 0.75]))
+
+# PFS
+weeks = [0, 6, 12, 18, 24, 30, 36, 42, 48, 54, 60, 66]
+cutoffs = 7.0 .* weeks  # days
+
+# make sure we ignore missing and only count real progression/exit days
+#counts = [count(x -&gt; !ismissing(x) &amp;&amp; x &lt;= c, expdf.EEVALUMP) for c in cutoffs]
+survival_counts_placebo = [count(x -&gt; !ismissing(x) &amp;&amp; x &lt;= c, exp_placebo.time_to_pfs) for c in cutoffs]
+survival_percents_placebo = 100 .* survival_counts_placebo ./ drug_cohort_size
+pfs_placebo = SurvivalMetric(drug_cohort_size, (100.0 .- survival_percents_placebo) / 100,  cutoffs)
+
+survival_counts_drug = [count(x -&gt; !ismissing(x) &amp;&amp; x &lt;= c, exp_drug.time_to_pfs) for c in cutoffs]
+survival_percents_drug = 100 .* survival_counts_drug ./ drug_cohort_size
+pfs_drug = SurvivalMetric(drug_cohort_size, (100.0 .- survival_percents_drug) / 100, cutoffs)</code></pre><p>We use MetricBindings from DigiPopData to match experimental data with endpoint names in the plausible population table.</p><pre><code class="language-julia hljs"># SLD baseline mean/sd
+sld_baseline_placebo_bind = MetricBinding(&quot;SLD_baseline&quot;, &quot;placebo&quot;, sld_baseline_placebo, &quot;SLD_baseline&quot;, true)
+sld_baseline_drug_bind = MetricBinding(&quot;SLD_baseline&quot;, &quot;drug&quot;, sld_baseline_drug, &quot;SLD_baseline&quot;, true)
+
+# SLD median/minmax
+best_sld_placebo_bind = MetricBinding(&quot;Best_dSLD&quot;, &quot;placebo&quot;, best_sld_placebo, &quot;best_dSLD&quot;, true)
+best_sld_drug_bind = MetricBinding(&quot;Best_dSLD&quot;, &quot;drug&quot;, best_sld_drug, &quot;best_dSLD&quot;, true)
+
+# PFS
+pfs_placebo_bind = MetricBinding(&quot;PFS_curve&quot;, &quot;placebo&quot;, pfs_placebo, &quot;time_to_pfs&quot;, true)
+pfs_drug_bind = MetricBinding(&quot;PFS_curve&quot;, &quot;drug&quot;, pfs_drug, &quot;time_to_pfs&quot;, true)
+
+data = [sld_baseline_placebo_bind, sld_baseline_drug_bind,
+        best_sld_placebo_bind, best_sld_drug_bind,
+        pfs_placebo_bind, pfs_drug_bind]</code></pre><p>Finally, we use the <code>select_cohort</code> function to solve the binary optimization problem, resulting in an optimal subset (the VPop) that matches the clinical data. By default, <code>SCIP.Optimizer</code> is used. You can provide a custom optimizer and time/gap settings in <code>select_cohort(...; kwargs...)</code>.</p><pre><code class="language-julia hljs">vpnum = 112
+vpop = select_cohort(ppop, data, vpnum; scip_limits_gap = 0.01)</code></pre><p>We can also visualize the results and compare the plausible population with the selected cohort.</p><pre><code class="language-julia hljs">vpopdf = filter(:scenario =&gt; x -&gt; x == &quot;drug&quot;,DataFrame(vpop))
+ppopdf = filter(:scenario =&gt; x -&gt; x == &quot;drug&quot;,DataFrame(ppop))
+
+function SLD_base_sim_exp(
+    df;
+    exp_mean = mean(exp_drug.SLD_baseline),
+    exp_std = std(exp_drug.SLD_baseline)
+)
+    sim_mean = mean(df.SLD_baseline)
+    sim_std  = std(df.SLD_baseline)
+
+    default_blue = palette(:default)[1]
+
+    p = plot(
+        xticks = ([1, 2], [&quot;Simulation&quot;, &quot;Clinical data&quot;]),
+        ylabel = &quot;SLD_baseline (mm)&quot;,
+        legend = :topright,
+        xlims = (0.5, 2.5),
+        dpi = 400
+    )
+
+    x_sim = fill(1, nrow(df)) .+ 0.08 .* randn(nrow(df))
+
+scatter!(
+    p,
+    x_sim,
+    df.SLD_baseline,
+    color = RGB(0.3, 0.45, 0.55),  # blue-grey
+    alpha = 0.35,
+    markersize = 3.5,
+    markerstrokewidth = 0,
+    label = false
+)
+
+    scatter!(
+        p,
+        [1], [sim_mean],
+        yerror = ([sim_std], [sim_std]),
+        color = default_blue,
+        markersize = 10,
+        linewidth = 4,
+        label = &quot;Simulation: mean ± std&quot;
+    )
+
+    scatter!(
+        p,
+        [2], [exp_mean],
+        yerror = ([exp_std], [exp_std]),
+        color = :red,
+        markersize = 9,
+        markershape = :diamond,
+        linewidth = 2,
+        label = &quot;Clinical data: mean ± std&quot;
+    )
+
+    return p
+end
+
+function dSLD_sim_exp(
+    df;
+    exp_q25 = quantile(exp_drug.best_dSLD, 0.25),
+    exp_q50 = quantile(exp_drug.best_dSLD, 0.5),
+    exp_q75 = quantile(exp_drug.best_dSLD, 0.75)
+)
+    sim_q25 = quantile(df.best_dSLD, 0.25)
+    sim_q50 = quantile(df.best_dSLD, 0.50)
+    sim_q75 = quantile(df.best_dSLD, 0.75)
+
+    default_blue = palette(:default)[1]
+
+    p = plot(
+        xticks = ([1, 2], [&quot;Simulation&quot;, &quot;Clinical data&quot;]),
+        ylabel = &quot;best_dSLD (%)&quot;,
+        legend = :topright,
+        xlims = (0.5, 2.5),
+        dpi = 400
+    )
+
+    # --- Simulation scatter ---
+    x_sim = fill(1, nrow(df)) .+ 0.08 .* randn(nrow(df))
+
+    scatter!(
+        p,
+        x_sim,
+        df.best_dSLD,
+        color = RGB(0.3, 0.45, 0.55),  # blue-grey
+    alpha = 0.35,
+    markersize = 3.5,
+    markerstrokewidth = 0,
+    label = false
+    )
+
+    # --- Simulation median + IQR ---
+    scatter!(
+        p,
+        [1], [sim_q50],
+        yerror = ([sim_q50 - sim_q25], [sim_q75 - sim_q50]),
+        color = default_blue,
+        markersize = 10,
+        linewidth = 4,
+        label = &quot;Simulation: median + IQR&quot;
+    )
+
+    # --- Clinical data ---
+    scatter!(
+        p,
+        [2], [exp_q50],
+        yerror = ([exp_q50 - exp_q25], [exp_q75 - exp_q50]),
+        color = :red,
+        markersize = 9,
+        markershape = :diamond,
+        linewidth = 2,
+        label = &quot;Clinical data: median + IQR&quot;
+    )
+
+    return p
+end
+
+p11 = SLD_base_sim_exp(ppopdf)
+p12 = SLD_base_sim_exp(vpopdf)
+p21 = dSLD_sim_exp(ppopdf)
+p22 = dSLD_sim_exp(vpopdf)
+p31 = plot(ppop, pfs_drug_bind; dpi=400, xguide=&quot;Time (days)&quot;, yguide=&quot;PFS (%)&quot;)
+p32 = plot(vpop, pfs_drug_bind; dpi=400, xguide=&quot;Time (days)&quot;, yguide=&quot;PFS (%)&quot;)
+
+p = plot(
+    p11, p12,
+    p21, p22,
+    p31, p32,
+    layout = (3, 2),
+    size = (1200, 1200),
+    margins=5Plots.mm, 
+    plot_title = &quot;Plausible Population vs Selected VPop (drug regimen)&quot;
+)</code></pre><p><img src="../Braniff2024plot.png" alt="braniff2024plot"/></p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../../">« Home</a><a class="docs-footer-nextpage" href="../../api/">API »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="auto">Automatic (OS)</option><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option><option value="catppuccin-latte">catppuccin-latte</option><option value="catppuccin-frappe">catppuccin-frappe</option><option value="catppuccin-macchiato">catppuccin-macchiato</option><option value="catppuccin-mocha">catppuccin-mocha</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 1.17.0 on <span class="colophon-date" title="Thursday 23 April 2026 13:54">Thursday 23 April 2026</span>. Using Julia version 1.12.6.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
