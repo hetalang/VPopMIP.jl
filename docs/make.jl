@@ -10,7 +10,6 @@ makedocs(
         "Tutorial" => [ # methods
             "tutorial/braniff2024.md",
         ],
-        "API" => "api.md",
     ],
 )
 
