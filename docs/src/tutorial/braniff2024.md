@@ -214,4 +214,4 @@ p = plot(
     plot_title = "Plausible Population vs Selected VPop (drug regimen)"
 )
 ```
-![braniff2024plot](../../../models/Braniff2024/ppop_vpop_comparison.png)
+![braniff2024plot](./Braniff2024plot.png)

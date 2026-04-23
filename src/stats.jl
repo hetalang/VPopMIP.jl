@@ -1,5 +1,10 @@
 using StatsBase
 
+"""
+    statistics_summary(vpop::VirtualPopulation, data::AbstractVector)
+
+Compute summary statistics for the virtual population based on the provided data.
+"""
 function statistics_summary(vpop::VirtualPopulation, data::AbstractVector)
   stats = DataFrame(scenario=[], endpoint=[], stats=[])
   grpop = groupby(DataFrame(vpop), SCENARIO_COL)
@@ -13,6 +18,12 @@ function statistics_summary(vpop::VirtualPopulation, data::AbstractVector)
   return stats
 end
 
+"""
+    compute_statistics(vpop::VirtualPopulation, data::DigiPopData.MetricBinding)
+
+Compute statistics for a given Virtual Population based on the provided metric binding.
+Returns a dictionary containing the computed statistics.
+"""
 function compute_statistics(vpop::VirtualPopulation, data::DigiPopData.MetricBinding)
   scn = data.scenario
   ept = data.endpoint

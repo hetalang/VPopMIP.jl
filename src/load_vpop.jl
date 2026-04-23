@@ -30,11 +30,28 @@ Base.show(io::IO, mime::MIME"text/plain", vpop::VirtualPopulation) =
 
 Base.length(vpop::VirtualPopulation) = vpop.npop
 DataFrames.DataFrame(vpop::VirtualPopulation) = vpop.df
+"""
+    endpoints(vpop::VirtualPopulation) = vpop.endpoints
+
+Endpoints associated with the virtual population.
+"""
 endpoints(vpop::VirtualPopulation) = vpop.endpoints
+
+"""
+    scenarios(vpop::VirtualPopulation) = vpop.scenarios
+
+Scenarios associated with the virtual population.
+"""
 scenarios(vpop::VirtualPopulation) = vpop.scenarios
 has_endpoint(vpop::VirtualPopulation, ep) = ep in endpoints(vpop)
 has_scenario(vpop::VirtualPopulation, scn) = scn in scenarios(vpop)
 has_preselected(vpop::VirtualPopulation) = !isnothing(vpop.preselected)
+
+"""
+    objective_value(vpop::VirtualPopulation) = vpop.objective_value 
+    
+Objective value of the optimization problem for the selected cohort, if available.
+"""
 objective_value(vpop::VirtualPopulation) = vpop.objective_value
 has_vp_include(vpop::VirtualPopulation) = hasproperty(DataFrame(vpop), VPINCLUDE_COL)
 

@@ -8,8 +8,9 @@ makedocs(
     pages = [
         "Home" => "index.md",
         "Tutorial" => [ # methods
-            "tutorial/braniff2024.md",
+            "tutorial/Braniff2024.md",
         ],
+        "API" => "api.md",
     ],
 )
 
