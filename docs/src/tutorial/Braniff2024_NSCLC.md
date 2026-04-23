@@ -1,7 +1,8 @@
-# Tutorial
+# A non-small cell lung cancer (NSCLC) model
 
 A non-small cell lung cancer (NSCLC) model [2] is used to demonstrate the VPopMIP approach. A set of 1000 plausible patients was generated using scripts provided in the supplementary materials of [2].
 In the original study, individual patient data were used for VPop selection, including three endpoints for 112 patients across two treatment regimens (“drug” and “placebo”). To demonstrate applicability of the proposed method to more realistic settings, we converted individual-level data into summary statistics:
+
 - SLD_baseline: mean and std of baseline tumor size (sum of longest diameters)
 - best_dSLD: 25th, 50th, 75th percentiles of the best percentage change in SLD
 - PFS: progression free survival data
