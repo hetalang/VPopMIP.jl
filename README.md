@@ -4,16 +4,11 @@ Virtual population (VPop) selection for Quantitative Systems Pharmacology (QSP) 
 
 [![Build Status](https://github.com/hetalang/VPopMIP.jl/actions/workflows/CI.yml/badge.svg?branch=master)](https://github.com/hetalang/VPopMIP.jl/actions/workflows/CI.yml?query=branch%3Amaster)
 
-> ⚠️ This package is under active development.
+> ⚠️ This package is under development.
 
 ## Why this package?
 
-`VPopMIP.jl` implements a cohort-selection workflow where a large plausible population is filtered into a smaller virtual population that matches reported clinical summary statistics. The approach is formulated as a mixed-integer programming (MIP) problem and is designed for practical QSP calibration workflows.
-
-This draft README is based on your poster:
-- “Mixed-Integer Optimization for Virtual Population Selection in QSP Models”
-- Two-step process: generate plausible patients, then optimize selection against reported endpoints
-- Endpoint support highlighted in the poster: mean/sd, quantiles, and progression-free/survival curves
+`VPopMIP.jl` implements a cohort-selection workflow where a large plausible population is filtered into a smaller virtual population that matches reported clinical results (summary statistics and individual patients data). The approach is formulated as a mixed-integer programming (MIP) problem and is designed for practical QSP calibration workflows.
 
 ## Installation
 
@@ -21,6 +16,10 @@ This draft README is based on your poster:
 using Pkg
 Pkg.add(url="https://github.com/hetalang/VPopMIP.jl")
 ```
+
+## Citation
+
+E. Metelkin and I. Borisov, “Mixed-Integer Optimization for Virtual Population Selection in QSP Models,” 2026, doi: 10.13140/RG.2.2.31274.79049.
 
 ## Core idea
 
