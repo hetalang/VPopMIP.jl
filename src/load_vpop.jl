@@ -6,9 +6,11 @@ A struct representing a Virtual Population.
 
 ### Fields
 - `df::D`: A DataFrame containing the virtual population data.
+- `endpoints::E`: A collection of clinical endpoints associated with the virtual population.
 - `scenarios::SC`: A collection of scenarios associated with the virtual population.
 - `npop::Int64`: The number of individuals in the virtual population. 
 - `preselected::S`: Pre-selected individuals in the virtual population.
+- `objective_value::Union{Nothing,Float64}`: The objective value of the optimization problem for the selected cohort, if available.
 
 Use `load_vpop(pop::DataFrame)` to create an instance of `VirtualPopulation` from DataFrame.
 """

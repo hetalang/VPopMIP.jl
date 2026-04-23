@@ -1,4 +1,14 @@
 
+"""
+    select_cohort(pop::VirtualPopulation, data::Vector{M}, vpnum::Int; kwargs...) where {M<:DigiPopData.MetricBinding}
+
+Select a cohort of virtual patients from a `VirtualPopulation` that best matches the provided data. The selection is performed by solving a Mixed-Integer Programming (MIP) optimization problem.
+# Arguments
+- `pop::VirtualPopulation`: The DataFrame with plausiblel population from which to select the cohort. 
+- `data::Vector{M}`: A vector of metric bindings that define the data to match. See DigiPopData.jl for details on how to create metric bindings.
+- `vpnum::Int`: The desired size of the virtual population cohort to be selected.
+- `kwargs...`: Additional keyword arguments for the optimization solver (e.g., optimizer choice, time limits, etc.).
+"""
 function select_cohort(pop::VirtualPopulation, data::Vector{M}, vpnum::Int; kwargs...) where {M<:DigiPopData.MetricBinding}
 
   @assert (0 < vpnum <= length(pop)) "Virtual Population size `vpnum` should be in the interval vpnum ∈ (0, $(length(pop))]." 
