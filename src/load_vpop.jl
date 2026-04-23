@@ -34,6 +34,7 @@ has_endpoint(vpop::VirtualPopulation, ep) = ep in endpoints(vpop)
 has_scenario(vpop::VirtualPopulation, scn) = scn in scenarios(vpop)
 has_preselected(vpop::VirtualPopulation) = !isnothing(vpop.preselected)
 objective_value(vpop::VirtualPopulation) = vpop.objective_value
+has_vp_include(vpop::VirtualPopulation) = hasproperty(DataFrame(vpop), VPINCLUDE_COL)
 
 """
     load_vpop(pop::DataFrame) -> VirtualPopulation

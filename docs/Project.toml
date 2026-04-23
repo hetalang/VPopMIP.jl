@@ -1,0 +1,5 @@
+[deps]
+Documenter = "e30172f5-a6a5-5a46-863b-614d45cd2de4"
+VPopMIP = "7eca7bcc-9451-40d0-a897-5ef4a75126a7"
+DigiPopData = "0d51003c-419e-4b70-b590-68fae1e54ab3"
+DataFrames = "a93c6f00-e57d-5684-b7b6-d8193f3e46c0"
