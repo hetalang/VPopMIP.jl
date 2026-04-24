@@ -3,7 +3,7 @@
 Virtual population (VPop) selection for Quantitative Systems Pharmacology (QSP) using mixed-integer optimization.
 
 [![Build Status](https://github.com/hetalang/VPopMIP.jl/actions/workflows/CI.yml/badge.svg?branch=master)](https://github.com/hetalang/VPopMIP.jl/actions/workflows/CI.yml?query=branch%3Amaster)
-[![Docs](https://img.shields.io/badge/docs-stable-blue.svg)](https://hetalang.github.io/VPopMIP.jl/dev)
+[![Dev](https://img.shields.io/badge/docs-dev-blue.svg)](https://hetalang.github.io/VPopMIP.jl/dev)
 
 > ⚠️ This package is under development.
 
