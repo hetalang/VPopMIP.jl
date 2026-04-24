@@ -29,10 +29,5 @@ https://hetalang.github.io/DigiPopData.jl/dev/
 
 ## Citation
 
-1. G. Kolesova, A. Stepanov, G. Lebedeva, and O. Demin, “Application of different approaches to
-generate virtual patient populations for the quantitative systems pharmacology model of
-erythropoiesis,” J Pharmacokinet Pharmacodyn, vol. 49, no. 5, pp. 511–524, Oct. 2022, doi:
-10.1007/s10928-022-09814-y.
-2. N. Braniff et al., “An integrated quantitative systems pharmacology virtual population approach for
-calibration with oncology efficacy endpoints,” CPT Pharmacom & Syst Pharma, p. psp4.13270, Nov.
-2024, doi: 10.1002/psp4.13270.
+1. G. Kolesova, A. Stepanov, G. Lebedeva, and O. Demin, “Application of different approaches to generate virtual patient populations for the quantitative systems pharmacology model of erythropoiesis,” J Pharmacokinet Pharmacodyn, vol. 49, no. 5, pp. 511–524, Oct. 2022, doi:10.1007/s10928-022-09814-y.
+2. N. Braniff et al., “An integrated quantitative systems pharmacology virtual population approach for calibration with oncology efficacy endpoints,” CPT Pharmacom & Syst Pharma, p. psp4.13270, Nov. 2024, doi: 10.1002/psp4.13270.
