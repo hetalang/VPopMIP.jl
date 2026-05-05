@@ -87,11 +87,13 @@ function build_mip_prob(pop, data, vpnum)
       include_vp = Bool.(Vector(grpop[(scn,)][!, VPINCLUDE_COL]))
       sim = Vector(grpop[(scn,)][include_vp, ept])    
       X = x[include_vp]
+      obj_exp = DigiPopData.add_mismatch_expression!(prob, sim, metric, X)
     else
       sim = float.(Vector(grpop[(scn,)][!, ept]))
       X = x 
+      obj_exp = DigiPopData.add_mismatch_expression!(prob, sim, metric, X, vpnum)
     end
-    obj_exp = DigiPopData.add_mismatch_expression!(prob, sim, metric, X, vpnum)
+    
 
     @constraint(prob, z_ept[j] == obj_exp)
   end
