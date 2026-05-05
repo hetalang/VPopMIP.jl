@@ -87,7 +87,8 @@ function build_mip_prob(pop, data, vpnum)
       include_vp = Bool.(Vector(grpop[(scn,)][!, VPINCLUDE_COL]))
       sim = Vector(grpop[(scn,)][include_vp, ept])    
       X = x[include_vp]
-      obj_exp = DigiPopData.add_mismatch_expression!(prob, sim, metric, X)
+      metric.size > vpnum && throw(ArgumentError("Metric size should be less than or equal to `vpnum`."))
+      obj_exp = DigiPopData.add_mismatch_expression!(prob, sim, metric, X, metric.size)
     else
       sim = float.(Vector(grpop[(scn,)][!, ept]))
       X = x 
