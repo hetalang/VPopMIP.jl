@@ -7,8 +7,9 @@ makedocs(
     modules = [VPopMIP],
     pages = [
         "Home" => "index.md",
-        "Tutorial" => [ # methods
-            "tutorial/Braniff2024_NSCLC.md",
+        "Tutorials" => [ 
+            "tutorials/PKPD.md",
+            "tutorials/Braniff2024_NSCLC.md",
         ],
         "API" => "api.md",
     ],
