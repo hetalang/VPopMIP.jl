@@ -40,16 +40,23 @@ function solve_mip_prob(prob, pop;
 
   JuMP.optimize!(prob)
 
-  if JuMP.termination_status(prob) == MathOptInterface.OPTIMAL
+  ts = JuMP.termination_status(prob)
+  ps = JuMP.primal_status(prob)
+
+  if ps == MathOptInterface.FEASIBLE_POINT
     idxs = round.(Int, JuMP.value.(prob[:x]))
 
     grdf = groupby(DataFrame(pop), SCENARIO_COL)
     df_cohort = combine(grdf) do g
       g[Bool.(idxs), :]
     end
+
+    if ts != MathOptInterface.OPTIMAL
+      @warn "Returning best feasible solution found, but optimality was not proven." ts ps objective=JuMP.objective_value(prob)
+    end
     return VirtualPopulation(df_cohort, endpoints(pop), scenarios(pop), sum(idxs), pop.preselected, JuMP.objective_value(prob))
   else 
-    println("No solution found. Check your setup or choose a different Virtual Population size `vpnum`.")
+    @warn "No feasible solution available." ts ps raw=JuMP.raw_status(prob)
     return nothing
   end
 end
