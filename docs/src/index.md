@@ -21,11 +21,10 @@ The researcher defines ranges and distributions for model parameters and perform
 
 2. **Selection of a VPop from the plausible population**
 Although the plausible population satisfies biological constraints, it does not necessarily reproduce clinical trial outcomes. The goal of this step is therefore to select a subset of patients that matches reported clinical endpoints.
-This subset selection problem is formulated as a mixed-integer programming (MIP) problem. Binary variables 𝑥𝑖 ∈ {0,1} indicate whether a plausible patient is included in the VPop, subject to a constraint on the desired VPop size. The objective function minimizes the mismatch between simulated and experimental data across multiple clinical endpoints.
+This subset selection problem is formulated as a mixed-integer programming (MIP) problem. Binary variables xᵢ ∈ {0,1} indicate whether a plausible patient is included in the VPop, subject to a constraint on the desired VPop size. The objective function minimizes the mismatch between simulated and experimental data across multiple clinical endpoints.
 Since individual patient data are often unavailable, the method focuses on endpoints reported as cohort-level statistics, such as means, std, quantiles, and survival data.
 
-Details on the mathematical formulation of the objective function terms, corresponding to different types of clinical data, can be found in DigiPopData package documentation:
-https://hetalang.github.io/DigiPopData.jl/dev/
+Details on the mathematical formulation of the objective function terms, corresponding to different types of clinical data, can be found in [DigiPopData package documentation](https://hetalang.github.io/DigiPopData.jl/dev/)
 
 ## Citation
 

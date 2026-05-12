@@ -10,18 +10,18 @@ In the original study, individual patient data were used for VPop selection, inc
 First, we load the simulated plausible population and use the `load_vpop` function to select the columns in the plausible patient table that correspond to clinically reported endpoints.
 
 ```julia
-using VPopMIP, CSV, DataFrames, Plots, StatsBase, StatsPlots
+using VPopMIP, CSV, DataFrames, Plots, StatsBase
 
-ppopdf = CSV.read("../../../models/Braniff2024/ppopdf1000.csv", DataFrame)
-ppop = load_vpop(ppopdf1000; endpoints=["best_dSLD", "time_to_best", "time_to_pfs", "SLD_baseline"])
+ppopdf = CSV.read("./models/Braniff2024/ppopdf1000.csv", DataFrame)
+ppop = load_vpop(ppopdf; endpoints=["best_dSLD", "time_to_best", "time_to_pfs", "SLD_baseline"])
 ```
 
 Next, we load clinical data (individual patient data for the *drug* and *placebo* regimens) and convert it into summary statistics using predefined metrics available in [DigiPopData](https://hetalang.github.io/DigiPopData.jl/dev/), to represent a more realistic scenario.
 
 ```julia
 # Experimental cohort
-exp_placebo = CSV.read("../../../models/Braniff2024/synthetic_cohort_placebo.csv", DataFrame)
-exp_drug = CSV.read("../../../models/Braniff2024/synthetic_cohort_drug.csv", DataFrame)
+exp_placebo = CSV.read("./models/Braniff2024/synthetic_cohort_placebo.csv", DataFrame)
+exp_drug = CSV.read("./models/Braniff2024/synthetic_cohort_drug.csv", DataFrame)
 expdf = vcat(exp_placebo, exp_drug)
 
 # size of cohort (assuming the same for drug and placebo)
@@ -77,11 +77,14 @@ vpnum = 112
 vpop = select_cohort(ppop, data, vpnum; scip_limits_gap = 0.01)
 ```
 
-We can also visualize the results and compare the plausible population with the selected cohort.
+We can also visualize the results and compare patients selected at random with those selected by the MIP algorithm.
 
 ```julia
 vpopdf = filter(:scenario => x -> x == "drug",DataFrame(vpop))
 ppopdf = filter(:scenario => x -> x == "drug",DataFrame(ppop))
+
+rand_vpopdf = ppopdf[sample(1:nrow(ppopdf), vpnum; replace=false), :]
+rand_vpop = load_vpop(rand_vpopdf)
 
 function SLD_base_sim_exp(
     df;
@@ -198,11 +201,11 @@ function dSLD_sim_exp(
     return p
 end
 
-p11 = SLD_base_sim_exp(ppopdf)
+p11 = SLD_base_sim_exp(rand_vpopdf)
 p12 = SLD_base_sim_exp(vpopdf)
-p21 = dSLD_sim_exp(ppopdf)
+p21 = dSLD_sim_exp(rand_vpopdf)
 p22 = dSLD_sim_exp(vpopdf)
-p31 = plot(ppop, pfs_drug_bind; dpi=400, xguide="Time (days)", yguide="PFS (%)")
+p31 = plot(rand_vpop, pfs_drug_bind; dpi=400, xguide="Time (days)", yguide="PFS (%)")
 p32 = plot(vpop, pfs_drug_bind; dpi=400, xguide="Time (days)", yguide="PFS (%)")
 
 p = plot(
@@ -212,7 +215,7 @@ p = plot(
     layout = (3, 2),
     size = (1200, 1200),
     margins=5Plots.mm, 
-    plot_title = "Plausible Population vs Selected VPop (drug regimen)"
+    plot_title = "Random Selection vs MIP-based Selected VPop (drug regimen)"
 )
 ```
 ![braniff2024plot](./Braniff2024plot.png)
