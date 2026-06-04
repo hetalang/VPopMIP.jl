@@ -1,4 +1,3 @@
-
 """
     VirtualPopulation{D,SC,S}
 
@@ -6,10 +5,10 @@ A struct representing a Virtual Population.
 
 ### Fields
 - `df::D`: A DataFrame containing the virtual population data.
-- `endpoints::E`: A collection of clinical endpoints associated with the virtual population.
-- `scenarios::SC`: A collection of scenarios associated with the virtual population.
-- `npop::Int64`: The number of individuals in the virtual population. 
-- `preselected::S`: Pre-selected individuals in the virtual population.
+- `endpoints::E`: Clinical endpoints identifiers (names) associated with the virtual population.
+- `scenarios::SC`: Scenarios identifiers (names) associated with the virtual population.
+- `npop::Int64`: The number of individuals in the virtual population.
+- `preselected::S`: Pre-selected individuals forced to be included in the final selection.
 - `objective_value::Union{Nothing,Float64}`: The objective value of the optimization problem for the selected cohort, if available.
 
 Use `load_vpop(pop::DataFrame)` to create an instance of `VirtualPopulation` from DataFrame.
@@ -63,6 +62,8 @@ Load Virtual Population from a DataFrame.
 function load_vpop(pop::DataFrame; endpoints=nothing)
   !hasproperty(pop, VPID_COL) &&  throw(ArgumentError("$VPID_COL column not found in the Virtual Population table."))
   !hasproperty(pop, SCENARIO_COL) &&  throw(ArgumentError("$SCENARIO_COL column not found in the Virtual Population table."))
+
+  pop = copy(pop)
   
   if isnothing(endpoints) 
     epts = names(pop, Not([VPID_COL, SCENARIO_COL]))
@@ -74,10 +75,21 @@ function load_vpop(pop::DataFrame; endpoints=nothing)
   end
 
   @info "Loading Virtual Population."
+  _normalize_endpoint_types!(pop, epts)
   df_unique_vpids = unique(pop,VPID_COL)
   npop = nrow(df_unique_vpids)
   scenarios = unique(pop[!,SCENARIO_COL])
   preselected = hasproperty(pop, PRESELECTED_COL) ? Bool.(df_unique_vpids[!,PRESELECTED_COL]) : nothing # no pre-selection by default
 
   return VirtualPopulation(pop, epts, scenarios, npop, preselected, nothing)
+end
+
+function _normalize_endpoint_types!(pop::DataFrame, endpoints)
+  for ept in endpoints
+    col = pop[!, ept]
+    if nonmissingtype(eltype(col)) <: Integer
+      pop[!, ept] = Float64.(col)
+    end
+  end
+  return pop
 end
