@@ -97,7 +97,7 @@ function build_mip_prob(pop, data, vpnum)
       metric.size > vpnum && throw(ArgumentError("Metric size should be less than or equal to `vpnum`."))
       obj_exp = DigiPopData.add_loss_expression!(prob, sim, mb, X, metric.size)
     else
-      sim = float.(Vector(grpop[(scn,)][!, ept]))
+      sim = Vector(grpop[(scn,)][!, ept])
       X = x 
       obj_exp = DigiPopData.add_loss_expression!(prob, sim, mb, X, vpnum)
     end
