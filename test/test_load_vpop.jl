@@ -26,4 +26,3 @@ vpop = load_vpop(df1)
 @test length(vpop) == 3
 @test length(scenarios(vpop)) == 2
 @test length(endpoints(vpop)) == 3
-vpop
