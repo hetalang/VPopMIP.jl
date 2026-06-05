@@ -1,6 +1,8 @@
 # A non-small cell lung cancer (NSCLC) model
 
-A non-small cell lung cancer (NSCLC) model [2] is used to demonstrate the VPopMIP approach. A set of 1000 plausible patients was generated using scripts provided in the supplementary materials of [2].
+__This tutorial demonstrates how to generate metrics **from personal-level data** and use them to select a virtual population (VPop) from simulated data using the VPopMIP approach.__
+
+A non-small cell lung cancer (NSCLC) model is used to demonstrate the VPopMIP approach. The model is described in [An integrated quantitative systems pharmacology virtual population approach for calibration with oncology efficacy endpoints](https://doi.org/10.1002/psp4.13270). A set of 1000 plausible patients was generated using scripts provided in the supplementary materials of that work.
 In the original study, individual patient data were used for VPop selection, including three endpoints for 112 patients across two treatment regimens (“drug” and “placebo”). To demonstrate applicability of the proposed method to more realistic settings, we converted individual-level data into summary statistics:
 
 - SLD_baseline: mean and std of baseline tumor size (sum of longest diameters)
@@ -54,16 +56,16 @@ We use MetricBindings from DigiPopData to match experimental data with endpoint 
 
 ```julia
 # SLD baseline mean/sd
-sld_baseline_placebo_bind = MetricBinding("SLD_baseline", "placebo", sld_baseline_placebo, "SLD_baseline", true)
-sld_baseline_drug_bind = MetricBinding("SLD_baseline", "drug", sld_baseline_drug, "SLD_baseline", true)
+sld_baseline_placebo_bind = MetricBinding("SLD_baseline", "placebo", sld_baseline_placebo, "SLD_baseline")
+sld_baseline_drug_bind = MetricBinding("SLD_baseline", "drug", sld_baseline_drug, "SLD_baseline")
 
 # SLD median/minmax
-best_sld_placebo_bind = MetricBinding("Best_dSLD", "placebo", best_sld_placebo, "best_dSLD", true)
-best_sld_drug_bind = MetricBinding("Best_dSLD", "drug", best_sld_drug, "best_dSLD", true)
+best_sld_placebo_bind = MetricBinding("Best_dSLD", "placebo", best_sld_placebo, "best_dSLD")
+best_sld_drug_bind = MetricBinding("Best_dSLD", "drug", best_sld_drug, "best_dSLD")
 
 # PFS
-pfs_placebo_bind = MetricBinding("PFS_curve", "placebo", pfs_placebo, "time_to_pfs", true)
-pfs_drug_bind = MetricBinding("PFS_curve", "drug", pfs_drug, "time_to_pfs", true)
+pfs_placebo_bind = MetricBinding("PFS_curve", "placebo", pfs_placebo, "time_to_pfs")
+pfs_drug_bind = MetricBinding("PFS_curve", "drug", pfs_drug, "time_to_pfs")
 
 data = [sld_baseline_placebo_bind, sld_baseline_drug_bind,
         best_sld_placebo_bind, best_sld_drug_bind,
@@ -80,8 +82,8 @@ vpop = select_cohort(ppop, data, vpnum; scip_limits_gap = 0.01)
 We can also visualize the results and compare patients selected at random with those selected by the MIP algorithm.
 
 ```julia
-vpopdf = filter(:scenario => x -> x == "drug",DataFrame(vpop))
-ppopdf = filter(:scenario => x -> x == "drug",DataFrame(ppop))
+vpopdf = filter(:scenario => x -> x == "drug", DataFrame(vpop))
+ppopdf = filter(:scenario => x -> x == "drug", DataFrame(ppop))
 
 rand_vpopdf = ppopdf[sample(1:nrow(ppopdf), vpnum; replace=false), :]
 rand_vpop = load_vpop(rand_vpopdf)
