@@ -5,8 +5,6 @@
 [![Build Status](https://github.com/hetalang/VPopMIP.jl/actions/workflows/CI.yml/badge.svg?branch=master)](https://github.com/hetalang/VPopMIP.jl/actions/workflows/CI.yml?query=branch%3Amaster)
 [![Dev](https://img.shields.io/badge/docs-dev-blue.svg)](https://hetalang.github.io/VPopMIP.jl/dev)
 
-> ⚠️ This package is under development.
-
 ## Why this package?
 
 `VPopMIP.jl` implements a cohort-selection workflow where a large virtual population is filtered into a smaller one that matches reported clinical results (summary statistics and individual patients data). The approach is formulated as a mixed-integer programming (MIP) problem and is designed for practical QSP calibration workflows.
@@ -18,27 +16,6 @@ using Pkg
 
 Pkg.add(url="https://github.com/hetalang/DigiPopData.jl")
 Pkg.add(url="https://github.com/hetalang/VPopMIP.jl")
-```
-
-## Quick start
-
-See more details in the documentation [here](https://hetalang.github.io/VPopMIP.jl/dev).
-
-```julia
-using CSV, DataFrames
-using VPopMIP
-
-# load clinical data
-metrics_df = CSV.File("metrics.csv", DataFrame)
-data = parse_metric_bindings(metrics_df)
-
-# load VP simulations
-vpop_df = CSV.File("vpop.csv", DataFrame)
-cohort = load_vpop(vpop_df)
-
-# subset optimal virtual population of size 100
-sub_cohort = subset_vpop(cohort, data, 100)
-statistics_summary(sub_cohort, data)
 ```
 
 ## Citation
