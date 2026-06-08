@@ -14,13 +14,13 @@ The goal of generating a Virtual Population (VPop) is to support drug developmen
 
 ## Method
 
-**VPopMIP provides a method for selecting a subpopulation from an existing virtual population so that the selected subset matches clinical data.** In practice, the method chooses a subset of patients from a generated population and optimizes it against cohort-level clinical endpoints.
+**VPopMIP provides a method for selecting a subset from an existing virtual population so that the selected subset matches clinical data.** In practice, the method chooses a subset of patients from a generated population and optimizes it against cohort-level clinical endpoints.
 
 The selection problem is formulated as a mixed-integer programming (MIP) problem. Binary variables x_i in {0,1} indicate whether a patient is included in the VPop, subject to a constraint on the desired VPop size. The objective function minimizes the mismatch between simulated and experimental data across multiple clinical endpoints. Since individual patient data are often unavailable, the method focuses on endpoints reported as cohort-level statistics, such as means, std, quantiles, and survival data.
 
 Details on the mathematical formulation of the objective function terms, corresponding to different types of clinical data, can be found in [DigiPopData package documentation](https://hetalang.github.io/DigiPopData.jl/dev/). 
 
-> The approach corresponds to the selection step of the two-step VPop framework described in [2] but can be applied to both plausible and general virtual cohorts.
+> The approach corresponds to the selection step of the two-step VPop framework described in [2] but can be applied to both plausible and general virtual populations.
 
 ## Citation
 

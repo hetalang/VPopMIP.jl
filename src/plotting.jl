@@ -37,7 +37,7 @@ end
 
 @recipe function plot(sim::AbstractVector, metric::DigiPopData.SurvivalMetric)
   
-  stats = compute_statistics(sim, metric)
+  stats = statistics_summary(sim, metric)
   times = stats[:times]
   dir = get(plotattributes, :survival_dir, :decreasing)
 
