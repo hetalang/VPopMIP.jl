@@ -21,7 +21,7 @@ Next, we load the clinical data for the *drug* and *placebo* regimens as summary
 
 ```@example Braniff2024
 metrics_df = CSV.read("./models/Braniff2024/metrics_table.csv", DataFrame; stringtype=String)
-data = parse_metric_bindings(metrics_df)
+data = parse_metric_bindings(metrics_df);
 ```
 
 Finally, we use the `subset_vpop` function to solve the binary optimization problem, resulting in an optimal subset (the VPop) that matches the clinical data. By default, `SCIP.Optimizer` is used. You can provide a custom optimizer and time/gap settings in `subset_vpop(...; kwargs...)`.
@@ -40,10 +40,15 @@ ppopdf = filter(:scenario => x -> x == "drug", DataFrame(ppop))
 rand_vpopdf = ppopdf[sample(1:nrow(ppopdf), vpnum; replace=false), :]
 rand_vpop = load_vpop(rand_vpopdf)
 
+sld_drug_df = filter(row -> row.scenario == "drug" && row.endpoint == "SLD_baseline", metrics_df)
+best_dsld_drug_df = filter(row -> row.scenario == "drug" && row.endpoint == "best_dSLD", metrics_df)
+best_dsld_drug_values = parse.(Float64, strip.(split(best_dsld_drug_df."metric.values"[1], ';')))
+pfs_drug_bind = only(filter(d -> d.scenario == "drug" && d.endpoint == "time_to_pfs", data))
+
 function SLD_base_sim_exp(
     df;
-    exp_mean = mean(exp_drug.SLD_baseline),
-    exp_std = std(exp_drug.SLD_baseline)
+    exp_mean = sld_drug_df."metric.mean"[1],
+    exp_std = sld_drug_df."metric.sd"[1]
 )
     sim_mean = mean(df.SLD_baseline)
     sim_std  = std(df.SLD_baseline)
@@ -97,9 +102,9 @@ end
 
 function dSLD_sim_exp(
     df;
-    exp_q25 = quantile(exp_drug.best_dSLD, 0.25),
-    exp_q50 = quantile(exp_drug.best_dSLD, 0.5),
-    exp_q75 = quantile(exp_drug.best_dSLD, 0.75)
+    exp_q25 = best_dsld_drug_values[1],
+    exp_q50 = best_dsld_drug_values[2],
+    exp_q75 = best_dsld_drug_values[3]
 )
     sim_q25 = quantile(df.best_dSLD, 0.25)
     sim_q50 = quantile(df.best_dSLD, 0.50)

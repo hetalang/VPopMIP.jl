@@ -2,6 +2,17 @@
 
 `VPopMIP.jl` is a Julia package for selecting virtual populations (VPops) from QSP simulation outputs using mixed-integer optimization.
 
+## Glossary
+
+The key concept used throughout the package is the Virtual Population.
+
+A Virtual Population (VPop) is an ensemble of QSP model parameterizations generated to capture the observed statistics of the clinical population of interest. A member of a Virtual Population is referred to as a Virtual Patient.
+
+The package is designed around the `VirtualPopulation` object, which stores QSP model simulation results for different drug regimens and clinical endpoints. The package exports two main functions to operate with `VirtualPopulation`:
+
+- `load_vpop` constructs a `VirtualPopulation` object from a DataFrame.
+- `subset_vpop` selects Virtual Patients from a `VirtualPopulation` that best match clinical data and returns the selected subset as another `VirtualPopulation` object.
+
 ## Problem addressed
 
 The goal of generating a Virtual Population (VPop) is to support drug development by predicting the variability in patient responses observed in clinical trials. Several VPop generation methods were proposed [1], [2]. Nevertheless, their practical application in realworld QSP projects is often limited by project-specific challenges, including:

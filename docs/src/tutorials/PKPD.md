@@ -52,7 +52,7 @@ metric_mean_sd_bind = parse_metric_bindings(metric_mean_sd_df)
 metric_quantile_bind = parse_metric_bindings(metric_quantile_df)
 metric_quartile_bind = parse_metric_bindings(metric_quartile_df)
 
-data = vcat(metric_mean_sd_bind, metric_quantile_bind, metric_quartile_bind)
+data = vcat(metric_mean_sd_bind, metric_quantile_bind, metric_quartile_bind);
 ```
 
 ## Subset the Virtual Population

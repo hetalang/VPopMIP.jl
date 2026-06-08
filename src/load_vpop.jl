@@ -78,7 +78,7 @@ function load_vpop(pop::DataFrame; endpoints=nothing)
   _normalize_endpoint_types!(pop, epts)
   df_unique_vpids = unique(pop,VPID_COL)
   npop = nrow(df_unique_vpids)
-  scenarios = unique(pop[!,SCENARIO_COL])
+  scenarios = string.(unique(pop[!,SCENARIO_COL]))
   preselected = hasproperty(pop, PRESELECTED_COL) ? Bool.(df_unique_vpids[!,PRESELECTED_COL]) : nothing # no pre-selection by default
 
   return VirtualPopulation(pop, epts, scenarios, npop, preselected, nothing)

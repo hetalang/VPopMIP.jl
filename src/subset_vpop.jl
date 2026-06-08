@@ -7,39 +7,20 @@ Select a subset of virtual patients from a `VirtualPopulation` that best matches
 - `pop::VirtualPopulation`: The VirtualPopulation from which to select the subset. 
 - `data::Vector{M}`: A vector of metric bindings that define the data to match. See DigiPopData.jl for details on how to create metric bindings.
 - `vpnum::Int`: The desired size of the virtual population subset to be selected.
-- `kwargs...`: Additional keyword arguments for the optimization solver (e.g., optimizer choice, time limits, etc.).
+- `kwargs...`: Additional keyword arguments for the optimization solver (e.g., optimizer choice, time limits, `silent = true`, etc.).
 """
 function subset_vpop(pop::VirtualPopulation, data::Vector{M}, vpnum::Int; kwargs...) where {M<:DigiPopData.MetricBinding}
 
   @assert (0 < vpnum <= length(pop)) "Virtual Population size `vpnum` should be in the interval vpnum ∈ (0, $(length(pop))]." 
 
+  silent = get(kwargs, :silent, false)
   has_preselected(pop) && (@assert sum(pop.preselected) < vpnum "Number of pre-selected VP must be less than `vpnum`.")
-  @info "Generating optimization problem."
+  silent || @info "Generating optimization problem."
   prob = build_mip_prob(pop, data, vpnum)
 
-  @info "Solving optimization problem."
-  vpop = solve_mip_prob(prob, pop; kwargs...)
+  silent || @info "Solving optimization problem."
+  solve_mip_prob!(prob, pop; kwargs...)
   
-  return vpop
-end
-
-function solve_mip_prob(prob, pop; 
-  optimizer = SCIP.Optimizer, multialg = nothing, scip_limits_gap = 0.0, time_limit = 1e20)
-
-  if isnothing(multialg)
-    JuMP.set_optimizer(prob, optimizer)
-  else
-    JuMP.set_optimizer(prob, () -> MOA.Optimizer(optimizer))
-    JuMP.set_attribute(prob, MOA.Algorithm(), multialg)
-  end
-
-  if optimizer == SCIP.Optimizer 
-    JuMP.set_attribute(prob, "limits/gap", scip_limits_gap)
-    JuMP.set_attribute(prob, "limits/time", time_limit)
-  end
-
-  JuMP.optimize!(prob)
-
   ts = JuMP.termination_status(prob)
   ps = JuMP.primal_status(prob)
 
@@ -59,6 +40,26 @@ function solve_mip_prob(prob, pop;
     @warn "No feasible solution available." ts ps raw=JuMP.raw_status(prob)
     return nothing
   end
+end
+
+function solve_mip_prob!(prob, pop; 
+  optimizer = SCIP.Optimizer, multialg = nothing, scip_limits_gap = 0.0, time_limit = 1e20, silent = false)
+
+  if isnothing(multialg)
+    JuMP.set_optimizer(prob, optimizer)
+  else
+    JuMP.set_optimizer(prob, () -> MOA.Optimizer(optimizer))
+    JuMP.set_attribute(prob, MOA.Algorithm(), multialg)
+  end
+
+  if optimizer == SCIP.Optimizer 
+    JuMP.set_attribute(prob, "limits/gap", scip_limits_gap)
+    JuMP.set_attribute(prob, "limits/time", time_limit)
+  end
+
+  silent && JuMP.set_silent(prob)
+
+  JuMP.optimize!(prob)
 end
 
 
