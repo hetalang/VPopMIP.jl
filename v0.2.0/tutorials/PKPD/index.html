@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>Generating Virtual Population for a PKPD Model · VPopMIP.jl</title><meta name="title" content="Generating Virtual Population for a PKPD Model · VPopMIP.jl"/><meta property="og:title" content="Generating Virtual Population for a PKPD Model · VPopMIP.jl"/><meta property="twitter:title" content="Generating Virtual Population for a PKPD Model · VPopMIP.jl"/><meta name="description" content="Documentation for VPopMIP.jl."/><meta property="og:description" content="Documentation for VPopMIP.jl."/><meta property="twitter:description" content="Documentation for VPopMIP.jl."/><script data-outdated-warner src="../../assets/warner.js"></script><link href="https://cdnjs.cloudflare.com/ajax/libs/lato-font/3.0.0/css/lato-font.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/juliamono/0.050/juliamono.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/fontawesome.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/solid.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/brands.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.8/katex.min.css" rel="stylesheet" type="text/css"/><script>documenterBaseURL="../.."</script><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" data-main="../../assets/documenter.js"></script><script src="../../search_index.js"></script><script src="../../siteinfo.js"></script><script src="../../../versions.js"></script><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../assets/themes/catppuccin-mocha.css" data-theme-name="catppuccin-mocha"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../assets/themes/catppuccin-macchiato.css" data-theme-name="catppuccin-macchiato"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../assets/themes/catppuccin-frappe.css" data-theme-name="catppuccin-frappe"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../assets/themes/catppuccin-latte.css" data-theme-name="catppuccin-latte"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../assets/themes/documenter-dark.css" data-theme-name="documenter-dark" data-theme-primary-dark/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../assets/themes/documenter-light.css" data-theme-name="documenter-light" data-theme-primary/><script src="../../assets/themeswap.js"></script></head><body><div id="documenter"><nav class="docs-sidebar"><div class="docs-package-name"><span class="docs-autofit"><a href="../../">VPopMIP.jl</a></span></div><button class="docs-search-query input is-rounded is-small is-clickable my-2 mx-auto py-1 px-2" id="documenter-search-query">Search docs (Ctrl + /)</button><ul class="docs-menu"><li><a class="tocitem" href="../../">Home</a></li><li><a class="tocitem" href="../../quickstart/">Quick Start</a></li><li><span class="tocitem">Tutorials</span><ul><li class="is-active"><a class="tocitem" href>Generating Virtual Population for a PKPD Model</a><ul class="internal"><li><a class="tocitem" href="#Simulate-a-Virtual-Population"><span>Simulate a Virtual Population</span></a></li><li><a class="tocitem" href="#Define-Experimental-Data"><span>Define Experimental Data</span></a></li><li><a class="tocitem" href="#Subset-the-Virtual-Population"><span>Subset the Virtual Population</span></a></li><li><a class="tocitem" href="#Visualize-and-Compare"><span>Visualize and Compare</span></a></li></ul></li><li><a class="tocitem" href="../Braniff2024_NSCLC/">A non-small cell lung cancer (NSCLC) model</a></li></ul></li><li><a class="tocitem" href="../../api/">API</a></li></ul><div class="docs-version-selector field has-addons"><div class="control"><span class="docs-label button is-static is-size-7">Version</span></div><div class="docs-selector control is-expanded"><div class="select is-fullwidth is-size-7"><select id="documenter-version-selector"></select></div></div></div></nav><div class="docs-main"><header class="docs-navbar"><a class="docs-sidebar-button docs-navbar-link fa-solid fa-bars is-hidden-desktop" id="documenter-sidebar-button" href="#"></a><nav class="breadcrumb"><ul class="is-hidden-mobile"><li><a class="is-disabled">Tutorials</a></li><li class="is-active"><a href>Generating Virtual Population for a PKPD Model</a></li></ul><ul class="is-hidden-tablet"><li class="is-active"><a href>Generating Virtual Population for a PKPD Model</a></li></ul></nav><div class="docs-right"><a class="docs-navbar-link" href="https://github.com/hetalang/VPopMIP.jl" title="View the repository on GitHub"><span class="docs-icon fa-brands"></span><span class="docs-label is-hidden-touch">GitHub</span></a><a class="docs-navbar-link" href="https://github.com/hetalang/VPopMIP.jl/blob/master/docs/src/tutorials/PKPD.md" title="Edit source on GitHub"><span class="docs-icon fa-solid"></span></a><a class="docs-settings-button docs-navbar-link fa-solid fa-gear" id="documenter-settings-button" href="#" title="Settings"></a><a class="docs-article-toggle-button fa-solid fa-chevron-up" id="documenter-article-toggle-button" href="javascript:;" title="Collapse all docstrings"></a></div></header><article class="content" id="documenter-page"><h1 id="Generating-Virtual-Population-for-a-PKPD-Model"><a class="docs-heading-anchor" href="#Generating-Virtual-Population-for-a-PKPD-Model">Generating Virtual Population for a PKPD Model</a><a id="Generating-Virtual-Population-for-a-PKPD-Model-1"></a><a class="docs-heading-anchor-permalink" href="#Generating-Virtual-Population-for-a-PKPD-Model" title="Permalink"></a></h1><p>This tutorial demonstrates how to generate and subset a virtual population (VPop) that meets clinical data using a pharmacokinetic-pharmacodynamic (PKPD) model as an example. We use a three-compartment PK model with oral absorption and an Emax-type PD model. Two outputs, <code>drug_c</code> and <code>pd_output_1</code>, are observed on a set of drug regimens. The model is implemented in the Heta language and is available in the <a href="https://github.com/hetalang/DigiPopRecipes/">DigiPopRecipes repo</a>.</p><h2 id="Simulate-a-Virtual-Population"><a class="docs-heading-anchor" href="#Simulate-a-Virtual-Population">Simulate a Virtual Population</a><a id="Simulate-a-Virtual-Population-1"></a><a class="docs-heading-anchor-permalink" href="#Simulate-a-Virtual-Population" title="Permalink"></a></h2><p>First, simulate a large set of virtual patients by sampling model parameters within biologically plausible ranges. For each parameter, define biologically plausible ranges and simulate the model using the generated parameter sets. Here, we use <a href="https://github.com/hetalang/HetaSimulator.jl">HetaSimulator</a> to define scenarios (drug regimens) and run the simulations. Refer to the <a href="https://hetalang.github.io/HetaSimulator.jl/stable/">HetaSimulator documentation</a> for more details. For the sake of time, the simulation code is commented out, and we load a precomputed DataFrame representing the simulated population to define the <code>VirtualPopulation</code> type.</p><pre><code class="language-julia hljs">using VPopMIP, CSV, DataFrames, Plots, StatsBase
+
+#= Generate virtual population
+
+using HetaSimulator, Distributions
+const POP_SIZE = 3000
+
+parameters_df = DataFrame()
+
+## Add parameters using Uniform(a, b)
+# a = mean - sqrt(3) * std
+# b = mean + sqrt(3) * std, based on the specified mean and standard deviation.
+parameters_df[!, :Vc_0]    = rand(truncated(Uniform(5.5 - sqrt(3)*0.1, 5.5 + sqrt(3)*0.1), 1e-7, 1e+7), POP_SIZE)
+parameters_df[!, :kel]     = rand(truncated(Uniform(0.3 - sqrt(3)*0.1, 0.3 + sqrt(3)*0.1), 1e-7, 1e+7), POP_SIZE)
+parameters_df[!, :kdist_p] = rand(truncated(Uniform(0.7 - sqrt(3)*0.1, 0.7 + sqrt(3)*0.1), 1e-7, 1e+7), POP_SIZE)
+parameters_df[!, :kdist_t] = rand(truncated(Uniform(0.01 - sqrt(3)*0.1, 0.01 + sqrt(3)*0.1), 1e-7, 1e+7), POP_SIZE)
+parameters_df[!, :Emin_1]  = rand(truncated(Uniform(5.0 - sqrt(3)*0.1, 5.0 + sqrt(3)*0.1), 1e-7, 1e+7), POP_SIZE)
+parameters_df[!, :Emax_1]  = rand(truncated(Uniform(10.0 - sqrt(3)*0.1, 10.0 + sqrt(3)*0.1), 1e-7, 1e+7), POP_SIZE)
+parameters_df[!, :EC50_1]  = rand(truncated(Uniform(0.8 - sqrt(3)*0.1, 0.8 + sqrt(3)*0.1), 1e-7, 1e+7), POP_SIZE)
+
+p = load_platform(&quot;./models/PKPD&quot;)
+scn = read_scenarios(&quot;./models/PKPD/scenarios.csv&quot;)
+add_scenarios!(p, scn)
+mc_res = mc(p, parameters_df)
+vpop_df = DataFrame(mc_res)
+rename!(vpop_df, :iter =&gt; :id)
+vpop_df.scenario .= string.(vpop_df.scenario)
+=#
+
+vpop_df = CSV.read(&quot;./models/PKPD/vpopdf3000.csv&quot;, DataFrame)
+vpop0 = load_vpop(vpop_df; endpoints=[&quot;drug_c&quot;, &quot;pd_output_1&quot;])</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">Virtual Population.
+Number of Virtual Patients: 3000.
+Number of pre-selected Virtual Patients: 0.
+</code></pre><h2 id="Define-Experimental-Data"><a class="docs-heading-anchor" href="#Define-Experimental-Data">Define Experimental Data</a><a id="Define-Experimental-Data-1"></a><a class="docs-heading-anchor-permalink" href="#Define-Experimental-Data" title="Permalink"></a></h2><p>Next, load experimental data. The VPopMIP approach was designed to address a problem frequently encountered in practice, where individual patient data is not available and only summary statistics are reported. Here, we load artificial data for the considered therapy in the form of Mean/SD, Median, and Quartile statistics. The data is bound to observed endpoints, and relevant objective function components are formed. For more details on the objective and data binding, consult the <a href="https://hetalang.github.io/DigiPopData.jl/">DigiPopData documentation</a>.</p><pre><code class="language-julia hljs">metric_mean_sd_df  = CSV.read(&quot;./models/PKPD/data_mean_sd.csv&quot;, DataFrame; stringtype=String)
+metric_quantile_df = CSV.read(&quot;./models/PKPD/data_quantile.csv&quot;, DataFrame; stringtype=String)
+metric_quartile_df = CSV.read(&quot;./models/PKPD/data_quartile.csv&quot;, DataFrame; stringtype=String)
+metric_mean_sd_bind = parse_metric_bindings(metric_mean_sd_df)
+metric_quantile_bind = parse_metric_bindings(metric_quantile_df)
+metric_quartile_bind = parse_metric_bindings(metric_quartile_df)
+
+data = vcat(metric_mean_sd_bind, metric_quantile_bind, metric_quartile_bind);</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">18-element Vector{MetricBinding}:
+ MetricBinding(&quot;m018&quot;, &quot;scn2&quot;, MeanSDMetric(1024, 0.2706406325764379, 0.054471322041739725), &quot;drug_c&quot;, true, 1.0)
+ MetricBinding(&quot;m027&quot;, &quot;scn3&quot;, MeanSDMetric(1024, 0.81192328195257, 0.16341375564129865), &quot;drug_c&quot;, true, 1.0)
+ MetricBinding(&quot;m036&quot;, &quot;scn4&quot;, MeanSDMetric(1024, 2.706421899378152, 0.5447029381458076), &quot;drug_c&quot;, true, 1.0)
+ MetricBinding(&quot;m054&quot;, &quot;scn2&quot;, MeanSDMetric(1024, 10.97488252842177, 0.899111266154821), &quot;pd_output_1&quot;, true, 1.0)
+ MetricBinding(&quot;m063&quot;, &quot;scn3&quot;, MeanSDMetric(1024, 13.519382172765285, 1.0217092183960297), &quot;pd_output_1&quot;, true, 1.0)
+ MetricBinding(&quot;m072&quot;, &quot;scn4&quot;, MeanSDMetric(1024, 14.683426174514643, 1.0952217489934881), &quot;pd_output_1&quot;, true, 1.0)
+ MetricBinding(&quot;m018&quot;, &quot;scn2&quot;, QuantileMetric(1024, [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9], [0.2053123607962962, 0.22539315672149246, 0.2394329273136218, 0.2528837390545799, 0.2673438975560922, 0.27869922794506774, 0.29327369460246094, 0.3129248523940804, 0.3444614483233604], true, [20.000000000000004 10.000000000000005 … 10.000000000000004 10.000000000000004; 10.000000000000007 20.00000000000001 … 10.000000000000007 10.000000000000005; … ; 10.000000000000007 10.000000000000007 … 20.0 10.000000000000005; 10.000000000000005 10.000000000000007 … 10.000000000000005 20.000000000000007], Bool[1, 1, 1, 1, 1, 1, 1, 1, 1, 1], [0.1, 0.1, 0.09999999999999998, 0.10000000000000003, 0.09999999999999998, 0.09999999999999998, 0.09999999999999998, 0.10000000000000009, 0.09999999999999998, 0.09999999999999998]), &quot;drug_c&quot;, true, 1.0)
+ MetricBinding(&quot;m027&quot;, &quot;scn3&quot;, QuantileMetric(1024, [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9], [0.6159387053164055, 0.6761811751559448, 0.7183004158111594, 0.7586524911412651, 0.8020330715855859, 0.8360989454091106, 0.8798224445356732, 0.9387758641641115, 1.0333854426310471], true, [20.000000000000004 10.000000000000005 … 10.000000000000004 10.000000000000004; 10.000000000000007 20.00000000000001 … 10.000000000000007 10.000000000000005; … ; 10.000000000000007 10.000000000000007 … 20.0 10.000000000000005; 10.000000000000005 10.000000000000007 … 10.000000000000005 20.000000000000007], Bool[1, 1, 1, 1, 1, 1, 1, 1, 1, 1], [0.1, 0.1, 0.09999999999999998, 0.10000000000000003, 0.09999999999999998, 0.09999999999999998, 0.09999999999999998, 0.10000000000000009, 0.09999999999999998, 0.09999999999999998]), &quot;drug_c&quot;, true, 1.0)
+ MetricBinding(&quot;m036&quot;, &quot;scn4&quot;, QuantileMetric(1024, [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9], [2.0531593404048585, 2.25396764499313, 2.3943644386282315, 2.528841813594721, 2.67346796018402, 2.7869966371535897, 2.9327461206960646, 3.1292530623232864, 3.4446182982266866], true, [20.000000000000004 10.000000000000005 … 10.000000000000004 10.000000000000004; 10.000000000000007 20.00000000000001 … 10.000000000000007 10.000000000000005; … ; 10.000000000000007 10.000000000000007 … 20.0 10.000000000000005; 10.000000000000005 10.000000000000007 … 10.000000000000005 20.000000000000007], Bool[1, 1, 1, 1, 1, 1, 1, 1, 1, 1], [0.1, 0.1, 0.09999999999999998, 0.10000000000000003, 0.09999999999999998, 0.09999999999999998, 0.09999999999999998, 0.10000000000000009, 0.09999999999999998, 0.09999999999999998]), &quot;drug_c&quot;, true, 1.0)
+ MetricBinding(&quot;m054&quot;, &quot;scn2&quot;, QuantileMetric(1024, [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9], [9.86740502566165, 10.225089189732373, 10.486268264704652, 10.705006492249431, 10.927136166812414, 11.16612297436188, 11.42809375042463, 11.69215478159806, 12.10653936538927], true, [20.000000000000004 10.000000000000005 … 10.000000000000004 10.000000000000004; 10.000000000000007 20.00000000000001 … 10.000000000000007 10.000000000000005; … ; 10.000000000000007 10.000000000000007 … 20.0 10.000000000000005; 10.000000000000005 10.000000000000007 … 10.000000000000005 20.000000000000007], Bool[1, 1, 1, 1, 1, 1, 1, 1, 1, 1], [0.1, 0.1, 0.09999999999999998, 0.10000000000000003, 0.09999999999999998, 0.09999999999999998, 0.09999999999999998, 0.10000000000000009, 0.09999999999999998, 0.09999999999999998]), &quot;pd_output_1&quot;, true, 1.0)
+ MetricBinding(&quot;m063&quot;, &quot;scn3&quot;, QuantileMetric(1024, [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9], [12.267470550147847, 12.689134310748045, 12.933036126082598, 13.228600596834987, 13.473089550452759, 13.745610527694977, 14.006620881337515, 14.347625903838189, 14.862890024109499], true, [20.000000000000004 10.000000000000005 … 10.000000000000004 10.000000000000004; 10.000000000000007 20.00000000000001 … 10.000000000000007 10.000000000000005; … ; 10.000000000000007 10.000000000000007 … 20.0 10.000000000000005; 10.000000000000005 10.000000000000007 … 10.000000000000005 20.000000000000007], Bool[1, 1, 1, 1, 1, 1, 1, 1, 1, 1], [0.1, 0.1, 0.09999999999999998, 0.10000000000000003, 0.09999999999999998, 0.09999999999999998, 0.09999999999999998, 0.10000000000000009, 0.09999999999999998, 0.09999999999999998]), &quot;pd_output_1&quot;, true, 1.0)
+ MetricBinding(&quot;m072&quot;, &quot;scn4&quot;, QuantileMetric(1024, [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9], [13.342225430514322, 13.776099213736448, 14.063786097323556, 14.341053278641075, 14.605105743447517, 14.946927138311805, 15.227861002760482, 15.582950617482435, 16.146743989306525], true, [20.000000000000004 10.000000000000005 … 10.000000000000004 10.000000000000004; 10.000000000000007 20.00000000000001 … 10.000000000000007 10.000000000000005; … ; 10.000000000000007 10.000000000000007 … 20.0 10.000000000000005; 10.000000000000005 10.000000000000007 … 10.000000000000005 20.000000000000007], Bool[1, 1, 1, 1, 1, 1, 1, 1, 1, 1], [0.1, 0.1, 0.09999999999999998, 0.10000000000000003, 0.09999999999999998, 0.09999999999999998, 0.09999999999999998, 0.10000000000000009, 0.09999999999999998, 0.09999999999999998]), &quot;pd_output_1&quot;, true, 1.0)
+ MetricBinding(&quot;m018&quot;, &quot;scn2&quot;, QuantileMetric(1024, [0.25, 0.5, 0.75], [0.23061084013350397, 0.2673438975560922, 0.3032367424377075], true, [8.0 4.0 4.0; 4.0 8.0 4.0; 4.0 4.0 8.0], Bool[1, 1, 1, 1], [0.25, 0.25, 0.25, 0.25]), &quot;drug_c&quot;, true, 1.0)
+ MetricBinding(&quot;m027&quot;, &quot;scn3&quot;, QuantileMetric(1024, [0.25, 0.5, 0.75], [0.6918339857350609, 0.8020330715855859, 0.9097114557907329], true, [8.0 4.0 4.0; 4.0 8.0 4.0; 4.0 4.0 8.0], Bool[1, 1, 1, 1], [0.25, 0.25, 0.25, 0.25]), &quot;drug_c&quot;, true, 1.0)
+ MetricBinding(&quot;m036&quot;, &quot;scn4&quot;, QuantileMetric(1024, [0.25, 0.5, 0.75], [2.3061210174894042, 2.67346796018402, 3.0323719605270893], true, [8.0 4.0 4.0; 4.0 8.0 4.0; 4.0 4.0 8.0], Bool[1, 1, 1, 1], [0.25, 0.25, 0.25, 0.25]), &quot;drug_c&quot;, true, 1.0)
+ MetricBinding(&quot;m054&quot;, &quot;scn2&quot;, QuantileMetric(1024, [0.25, 0.5, 0.75], [10.371616219576143, 10.927136166812414, 11.555318217377202], true, [8.0 4.0 4.0; 4.0 8.0 4.0; 4.0 4.0 8.0], Bool[1, 1, 1, 1], [0.25, 0.25, 0.25, 0.25]), &quot;pd_output_1&quot;, true, 1.0)
+ MetricBinding(&quot;m063&quot;, &quot;scn3&quot;, QuantileMetric(1024, [0.25, 0.5, 0.75], [12.82630638054329, 13.473089550452759, 14.15491659374594], true, [8.0 4.0 4.0; 4.0 8.0 4.0; 4.0 4.0 8.0], Bool[1, 1, 1, 1], [0.25, 0.25, 0.25, 0.25]), &quot;pd_output_1&quot;, true, 1.0)
+ MetricBinding(&quot;m072&quot;, &quot;scn4&quot;, QuantileMetric(1024, [0.25, 0.5, 0.75], [13.94202402017617, 14.605105743447517, 15.389250454709448], true, [8.0 4.0 4.0; 4.0 8.0 4.0; 4.0 4.0 8.0], Bool[1, 1, 1, 1], [0.25, 0.25, 0.25, 0.25]), &quot;pd_output_1&quot;, true, 1.0)</code></pre><h2 id="Subset-the-Virtual-Population"><a class="docs-heading-anchor" href="#Subset-the-Virtual-Population">Subset the Virtual Population</a><a id="Subset-the-Virtual-Population-1"></a><a class="docs-heading-anchor-permalink" href="#Subset-the-Virtual-Population" title="Permalink"></a></h2><p>Use the <code>subset_vpop</code> function to select a subset of virtual population (the VPop) that best matches the target data.</p><pre><code class="language-julia hljs">vpnum = 1024  # desired VPop size
+vpop = subset_vpop(vpop0, data, vpnum; scip_limits_gap = 0.05)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">Virtual Population.
+Number of Virtual Patients: 1024.
+Number of pre-selected Virtual Patients: 0.
+</code></pre><h2 id="Visualize-and-Compare"><a class="docs-heading-anchor" href="#Visualize-and-Compare">Visualize and Compare</a><a id="Visualize-and-Compare-1"></a><a class="docs-heading-anchor-permalink" href="#Visualize-and-Compare" title="Permalink"></a></h2><p>Compare the selected VPop to the target data and to a random selection of virtual patients.</p><pre><code class="language-julia hljs">function mean_std_plot(pop, scn, ept; metric_df = metric_mean_sd_df)
+
+    sim_df = filter(row -&gt; (row[:scenario] == scn), DataFrame(pop))
+    exp_df = filter(row -&gt; (row[:scenario] == scn &amp;&amp; row[:endpoint] == ept), metric_df)
+    exp_mean = exp_df.&quot;metric.mean&quot;[1]
+    exp_std  = exp_df.&quot;metric.sd&quot;[1]
+
+    sim_mean = mean(sim_df[!,ept])
+    sim_std  = std(sim_df[!,ept])
+
+    default_blue = palette(:default)[1]
+
+    p = plot(
+        xticks = ([1, 2], [&quot;Simulation&quot;, &quot;Clinical data&quot;]),
+        ylabel = ept,
+        legend = :topright,
+        xlims = (0.5, 2.5),
+        dpi = 400
+    )
+
+    x_sim = fill(1, nrow(sim_df)) .+ 0.08 .* randn(nrow(sim_df))
+
+scatter!(
+    p,
+    x_sim,
+    sim_df[!,ept],
+    color = RGB(0.3, 0.45, 0.55),  # blue-grey
+    alpha = 0.35,
+    markersize = 3.5,
+    markerstrokewidth = 0,
+    label = false
+)
+
+    scatter!(
+        p,
+        [1], [sim_mean],
+        yerror = ([sim_std], [sim_std]),
+        color = default_blue,
+        markersize = 10,
+        linewidth = 4,
+        label = &quot;Simulation: mean ± std&quot;
+    )
+
+    scatter!(
+        p,
+        [2], [exp_mean],
+        yerror = ([exp_std], [exp_std]),
+        color = :red,
+        markersize = 9,
+        markershape = :diamond,
+        linewidth = 2,
+        label = &quot;Clinical Data: Mean ± SD&quot;
+    )
+
+    return p
+end
+
+function quartile_plot(pop, scn, ept; metric_df = metric_quartile_df)
+
+    sim_df = filter(row -&gt; (row[:scenario] == scn), DataFrame(pop))
+    exp_df = filter(row -&gt; (row[:scenario] == scn &amp;&amp; row[:endpoint] == ept), metric_df)
+    metric_values = parse.(Float64, split(exp_df.&quot;metric.values&quot;[1], &#39;;&#39;))
+
+    exp_q25 = metric_values[1]
+    exp_q50 = metric_values[2]
+    exp_q75 = metric_values[3]
+
+    sim_q25 = quantile(sim_df[!,ept], 0.25)
+    sim_q50 = quantile(sim_df[!,ept], 0.50)
+    sim_q75 = quantile(sim_df[!,ept], 0.75)
+
+
+    default_blue = palette(:default)[1]
+
+    p = plot(
+        xticks = ([1, 2], [&quot;Simulation&quot;, &quot;Clinical data&quot;]),
+        ylabel = ept,
+        legend = :topright,
+        xlims = (0.5, 2.5),
+        dpi = 400
+    )
+
+    # --- Simulation scatter ---
+    x_sim = fill(1, nrow(sim_df)) .+ 0.08 .* randn(nrow(sim_df))
+
+    scatter!(
+        p,
+        x_sim,
+        sim_df[!,ept],
+        color = RGB(0.3, 0.45, 0.55),  # blue-grey
+        alpha = 0.35,
+        markersize = 3.5,
+        markerstrokewidth = 0,
+        label = false
+    )
+
+    # --- Simulation median + IQR ---
+    scatter!(
+        p,
+        [1], [sim_q50],
+        yerror = ([sim_q50 - sim_q25], [sim_q75 - sim_q50]),
+        color = default_blue,
+        markersize = 10,
+        linewidth = 4,
+        label = &quot;Simulation: median + IQR&quot;
+    )
+
+    # --- Clinical data ---
+    scatter!(
+        p,
+        [2], [exp_q50],
+        yerror = ([exp_q50 - exp_q25], [exp_q75 - exp_q50]),
+        color = :red,
+        markersize = 9,
+        markershape = :diamond,
+        linewidth = 2,
+        label = &quot;Clinical Data: Median + IQR&quot;
+    )
+
+    return p
+
+end
+
+rand_ids = sample(unique(vpop_df.id), vpnum; replace=false)
+rand_vpopdf = filter(:id =&gt; in(rand_ids), vpop_df)
+rand_vpop = load_vpop(rand_vpopdf; endpoints=[&quot;drug_c&quot;, &quot;pd_output_1&quot;])
+
+p11 = mean_std_plot(rand_vpop, &quot;scn2&quot;, &quot;drug_c&quot;)
+p12 = mean_std_plot(vpop, &quot;scn2&quot;, &quot;drug_c&quot;)
+p21 = quartile_plot(rand_vpop, &quot;scn2&quot;, &quot;drug_c&quot;)
+p22 = quartile_plot(vpop, &quot;scn2&quot;, &quot;drug_c&quot;)
+
+p = plot(p11, p12, p21, p22, layout = (2, 2), size = (900, 700),
+    plot_title = &quot;Random Selection vs MIP-based Selected VPop (scn2, drug_c)&quot;)
+p</code></pre><img src="6a55b7ae.svg" alt="Example block output"/></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../../quickstart/">« Quick Start</a><a class="docs-footer-nextpage" href="../Braniff2024_NSCLC/">A non-small cell lung cancer (NSCLC) model »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="auto">Automatic (OS)</option><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option><option value="catppuccin-latte">catppuccin-latte</option><option value="catppuccin-frappe">catppuccin-frappe</option><option value="catppuccin-macchiato">catppuccin-macchiato</option><option value="catppuccin-mocha">catppuccin-mocha</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 1.17.0 on <span class="colophon-date" title="Tuesday 9 June 2026 13:10">Tuesday 9 June 2026</span>. Using Julia version 1.12.6.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
