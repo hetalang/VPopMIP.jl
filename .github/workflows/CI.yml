@@ -30,12 +30,12 @@ jobs:
         arch:
           - x64
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - uses: julia-actions/setup-julia@v2
         with:
           version: ${{ matrix.version }}
           arch: ${{ matrix.arch }}
-      - uses: julia-actions/cache@v2
+      - uses: julia-actions/cache@v3
       - name: Install unregistered dependencies
         run: julia --project=. -e 'using Pkg; Pkg.add(PackageSpec(url="https://github.com/hetalang/DigiPopData.jl")); Pkg.instantiate()'
       - uses: julia-actions/julia-buildpkg@v1
