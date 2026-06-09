@@ -7,7 +7,7 @@
 
 ## Why this package?
 
-`VPopMIP.jl` implements a cohort-selection workflow where a large virtual population is filtered into a smaller one that matches reported clinical results (summary statistics and individual patients data). The approach is formulated as a mixed-integer programming (MIP) problem and is designed for practical QSP calibration workflows.
+`VPopMIP.jl` implements a Virtual Population selection workflow where a large population is filtered into a smaller one that matches reported clinical results (summary statistics and individual patients data). The approach is formulated as a mixed-integer programming (MIP) problem and is designed for practical QSP calibration workflows.
 
 ## Installation
 

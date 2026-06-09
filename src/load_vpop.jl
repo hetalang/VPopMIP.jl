@@ -7,9 +7,9 @@ A struct representing a Virtual Population.
 - `df::D`: A DataFrame containing the virtual population data.
 - `endpoints::E`: Clinical endpoints identifiers (names) associated with the virtual population.
 - `scenarios::SC`: Scenarios identifiers (names) associated with the virtual population.
-- `npop::Int64`: The number of individuals in the virtual population.
-- `preselected::S`: Pre-selected individuals forced to be included in the final selection.
-- `objective_value::Union{Nothing,Float64}`: The objective value of the optimization problem for the selected cohort, if available.
+- `npop::Int64`: The number of virtual patients in the virtual population.
+- `preselected::S`: Pre-selected virtual patients forced to be included in the final selection.
+- `objective_value::Union{Nothing,Float64}`: The objective value of the optimization problem for the selected VPop, if available.
 
 Use `load_vpop(pop::DataFrame)` to create an instance of `VirtualPopulation` from DataFrame.
 """
@@ -19,13 +19,13 @@ struct VirtualPopulation{D,E,SC,S}
   scenarios::SC
   npop::Int64
   preselected::S
-  objective_value::Union{Nothing,Float64} # objective value of the optimization problem for the selected cohort, if available
+  objective_value::Union{Nothing,Float64} # objective value of the optimization problem for the selected VPop, if available
 end
 
 Base.show(io::IO, mime::MIME"text/plain", vpop::VirtualPopulation) =
   println(io, "Virtual Population." * "\n" *
               "Number of Virtual Patients: $(length(vpop))." * "\n" * 
-              "Number of pre-selected candidates: $(has_preselected(vpop) ? sum(vpop.preselected) : 0).")
+              "Number of pre-selected Virtual Patients: $(has_preselected(vpop) ? sum(vpop.preselected) : 0).")
 
 Base.length(vpop::VirtualPopulation) = vpop.npop
 DataFrames.DataFrame(vpop::VirtualPopulation) = vpop.df
@@ -49,7 +49,7 @@ has_preselected(vpop::VirtualPopulation) = !isnothing(vpop.preselected)
 """
     objective_value(vpop::VirtualPopulation) = vpop.objective_value 
     
-Objective value of the optimization problem for the selected cohort, if available.
+Objective value of the optimization problem for the selected VPop, if available.
 """
 objective_value(vpop::VirtualPopulation) = vpop.objective_value
 has_vp_include(vpop::VirtualPopulation) = hasproperty(DataFrame(vpop), VPINCLUDE_COL)
