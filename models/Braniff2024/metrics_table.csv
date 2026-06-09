@@ -1,0 +1,7 @@
+id,active,scenario,metric.type,metric.size,weight,endpoint,metric.mean,metric.sd,metric.levels,metric.values
+SLD_baseline_placebo,1,placebo,mean_sd,112,1.0,SLD_baseline,70.7795133963594,42.269000400434656,,
+SLD_baseline_drug,1,drug,mean_sd,112,1.0,SLD_baseline,70.7795133963594,42.269000400434656,,
+best_dSLD_placebo,1,placebo,quantile,112,1.0,best_dSLD,,,0.25;0.5;0.75,3.3422;9.7803;16.8001
+best_dSLD_drug,1,drug,quantile,112,1.0,best_dSLD,,,0.25;0.5;0.75, -57.0978;-38.5270;-14.9943
+PFS_placebo,1,placebo,survival,112,1.0,time_to_pfs,,,1.0;0.9196;0.7143;0.5625;0.4911;0.4107;0.3036;0.2589;0.1964;0.1429;0.0536;0.0446,0.0;42.0;84.0;126.0;168.0;210.0;252.0;294.0;336.0;378.0;420.0;462.0
+PFS_drug,1,drug,survival,112,1.0,time_to_pfs,,,1.0;0.9196;0.7143;0.5625;0.4911;0.4107;0.3036;0.2589;0.1964;0.1429;0.0536;0.0446,0.0;42.0;84.0;126.0;168.0;210.0;252.0;294.0;336.0;378.0;420.0;462.0

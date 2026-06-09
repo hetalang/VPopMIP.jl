@@ -1,95 +1,54 @@
 # A non-small cell lung cancer (NSCLC) model
 
-A non-small cell lung cancer (NSCLC) model [2] is used to demonstrate the VPopMIP approach. A set of 1000 plausible patients was generated using scripts provided in the supplementary materials of [2].
+A non-small cell lung cancer (NSCLC) model is used to demonstrate the VPopMIP approach. The model is described in [An integrated quantitative systems pharmacology virtual population approach for calibration with oncology efficacy endpoints](https://doi.org/10.1002/psp4.13270). A set of 1000 patients was generated using scripts provided in the supplementary materials of that work.
 In the original study, individual patient data were used for VPop selection, including three endpoints for 112 patients across two treatment regimens (“drug” and “placebo”). To demonstrate applicability of the proposed method to more realistic settings, we converted individual-level data into summary statistics:
 
 - SLD_baseline: mean and std of baseline tumor size (sum of longest diameters)
 - best_dSLD: 25th, 50th, 75th percentiles of the best percentage change in SLD
 - PFS: progression free survival data
 
-First, we load the simulated plausible population and use the `load_vpop` function to select the columns in the plausible patient table that correspond to clinically reported endpoints.
+First, we load the simulated virtual population as a `DataFrame` and use the `load_vpop` function to select the columns in the DataFrame that correspond to clinically reported endpoints and construct `VirtualPopulation`.
 
-```julia
+```@example Braniff2024
 using VPopMIP, CSV, DataFrames, Plots, StatsBase
 
 ppopdf = CSV.read("./models/Braniff2024/ppopdf1000.csv", DataFrame)
 ppop = load_vpop(ppopdf; endpoints=["best_dSLD", "time_to_best", "time_to_pfs", "SLD_baseline"])
 ```
 
-Next, we load clinical data (individual patient data for the *drug* and *placebo* regimens) and convert it into summary statistics using predefined metrics available in [DigiPopData](https://hetalang.github.io/DigiPopData.jl/dev/), to represent a more realistic scenario.
+Next, we load the clinical data for the *drug* and *placebo* regimens as summary statistics. For supported clinical data formats and loading options, see the [DigiPopData documentation](https://hetalang.github.io/DigiPopData.jl/dev/).
 
-```julia
-# Experimental cohort
-exp_placebo = CSV.read("./models/Braniff2024/synthetic_cohort_placebo.csv", DataFrame)
-exp_drug = CSV.read("./models/Braniff2024/synthetic_cohort_drug.csv", DataFrame)
-expdf = vcat(exp_placebo, exp_drug)
 
-# size of cohort (assuming the same for drug and placebo)
-drug_cohort_size = nrow(exp_placebo)
-
-# SLD baseline mean/sd
-sld_baseline_placebo = MeanSDMetric(drug_cohort_size, mean(exp_placebo.SLD_baseline), std(exp_placebo.SLD_baseline))
-sld_baseline_drug = MeanSDMetric(drug_cohort_size, mean(exp_drug.SLD_baseline), std(exp_drug.SLD_baseline))
-
-# SLD median/minmax
-best_sld_placebo = QuantileMetric(drug_cohort_size, [0.25, 0.5, 0.75], quantile(exp_placebo.best_dSLD, [0.25, 0.5, 0.75]))
-best_sld_drug = QuantileMetric(drug_cohort_size, [0.25, 0.5, 0.75], quantile(exp_drug.best_dSLD, [0.25, 0.5, 0.75]))
-
-# PFS
-weeks = [0, 6, 12, 18, 24, 30, 36, 42, 48, 54, 60, 66]
-cutoffs = 7.0 .* weeks  # days
-
-# make sure we ignore missing and only count real progression/exit days
-#counts = [count(x -> !ismissing(x) && x <= c, expdf.EEVALUMP) for c in cutoffs]
-survival_counts_placebo = [count(x -> !ismissing(x) && x <= c, exp_placebo.time_to_pfs) for c in cutoffs]
-survival_percents_placebo = 100 .* survival_counts_placebo ./ drug_cohort_size
-pfs_placebo = SurvivalMetric(drug_cohort_size, (100.0 .- survival_percents_placebo) / 100,  cutoffs)
-
-survival_counts_drug = [count(x -> !ismissing(x) && x <= c, exp_drug.time_to_pfs) for c in cutoffs]
-survival_percents_drug = 100 .* survival_counts_drug ./ drug_cohort_size
-pfs_drug = SurvivalMetric(drug_cohort_size, (100.0 .- survival_percents_drug) / 100, cutoffs)
+```@example Braniff2024
+metrics_df = CSV.read("./models/Braniff2024/metrics_table.csv", DataFrame; stringtype=String)
+data = parse_metric_bindings(metrics_df);
 ```
 
-We use MetricBindings from DigiPopData to match experimental data with endpoint names in the plausible population table.
+Finally, we use the `subset_vpop` function to solve the binary optimization problem, resulting in an optimal subset (the VPop) that matches the clinical data. By default, `SCIP.Optimizer` is used. You can provide a custom optimizer and time/gap settings in `subset_vpop(...; kwargs...)`.
 
-```julia
-# SLD baseline mean/sd
-sld_baseline_placebo_bind = MetricBinding("SLD_baseline", "placebo", sld_baseline_placebo, "SLD_baseline", true)
-sld_baseline_drug_bind = MetricBinding("SLD_baseline", "drug", sld_baseline_drug, "SLD_baseline", true)
-
-# SLD median/minmax
-best_sld_placebo_bind = MetricBinding("Best_dSLD", "placebo", best_sld_placebo, "best_dSLD", true)
-best_sld_drug_bind = MetricBinding("Best_dSLD", "drug", best_sld_drug, "best_dSLD", true)
-
-# PFS
-pfs_placebo_bind = MetricBinding("PFS_curve", "placebo", pfs_placebo, "time_to_pfs", true)
-pfs_drug_bind = MetricBinding("PFS_curve", "drug", pfs_drug, "time_to_pfs", true)
-
-data = [sld_baseline_placebo_bind, sld_baseline_drug_bind,
-        best_sld_placebo_bind, best_sld_drug_bind,
-        pfs_placebo_bind, pfs_drug_bind]
-```
-
-Finally, we use the `select_cohort` function to solve the binary optimization problem, resulting in an optimal subset (the VPop) that matches the clinical data. By default, `SCIP.Optimizer` is used. You can provide a custom optimizer and time/gap settings in `select_cohort(...; kwargs...)`.
-
-```julia
+```@example Braniff2024
 vpnum = 112
-vpop = select_cohort(ppop, data, vpnum; scip_limits_gap = 0.01)
+vpop = subset_vpop(ppop, data, vpnum; scip_limits_gap = 0.05)
 ```
 
 We can also visualize the results and compare patients selected at random with those selected by the MIP algorithm.
 
-```julia
-vpopdf = filter(:scenario => x -> x == "drug",DataFrame(vpop))
-ppopdf = filter(:scenario => x -> x == "drug",DataFrame(ppop))
+```@example Braniff2024
+vpopdf = filter(:scenario => x -> x == "drug", DataFrame(vpop))
+ppopdf = filter(:scenario => x -> x == "drug", DataFrame(ppop))
 
 rand_vpopdf = ppopdf[sample(1:nrow(ppopdf), vpnum; replace=false), :]
 rand_vpop = load_vpop(rand_vpopdf)
 
+sld_drug_df = filter(row -> row.scenario == "drug" && row.endpoint == "SLD_baseline", metrics_df)
+best_dsld_drug_df = filter(row -> row.scenario == "drug" && row.endpoint == "best_dSLD", metrics_df)
+best_dsld_drug_values = parse.(Float64, strip.(split(best_dsld_drug_df."metric.values"[1], ';')))
+pfs_drug_bind = only(filter(d -> d.scenario == "drug" && d.endpoint == "time_to_pfs", data))
+
 function SLD_base_sim_exp(
     df;
-    exp_mean = mean(exp_drug.SLD_baseline),
-    exp_std = std(exp_drug.SLD_baseline)
+    exp_mean = sld_drug_df."metric.mean"[1],
+    exp_std = sld_drug_df."metric.sd"[1]
 )
     sim_mean = mean(df.SLD_baseline)
     sim_std  = std(df.SLD_baseline)
@@ -143,9 +102,9 @@ end
 
 function dSLD_sim_exp(
     df;
-    exp_q25 = quantile(exp_drug.best_dSLD, 0.25),
-    exp_q50 = quantile(exp_drug.best_dSLD, 0.5),
-    exp_q75 = quantile(exp_drug.best_dSLD, 0.75)
+    exp_q25 = best_dsld_drug_values[1],
+    exp_q50 = best_dsld_drug_values[2],
+    exp_q75 = best_dsld_drug_values[3]
 )
     sim_q25 = quantile(df.best_dSLD, 0.25)
     sim_q50 = quantile(df.best_dSLD, 0.50)
@@ -217,5 +176,5 @@ p = plot(
     margins=5Plots.mm, 
     plot_title = "Random Selection vs MIP-based Selected VPop (drug regimen)"
 )
+p
 ```
-![braniff2024plot](./Braniff2024plot.png)

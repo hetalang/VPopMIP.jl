@@ -20,9 +20,19 @@ df3 = DataFrame(
     endpoint1 = [1., 2., 3.],
 )
 
+df4 = DataFrame(
+    id = [1, 2, 3],
+    scenario = ["scenario1", "scenario1", "scenario1"],
+    endpoint1 = [1, 2, 3],
+)
+
 @test_throws ArgumentError load_vpop(df2)
 @test_throws ArgumentError load_vpop(df3)
 vpop = load_vpop(df1)
 @test length(vpop) == 3
 @test length(scenarios(vpop)) == 2
 @test length(endpoints(vpop)) == 3
+vpop_int = load_vpop(df4)
+@test eltype(DataFrame(vpop_int).endpoint1) == Float64
+@test eltype(DataFrame(vpop_int).id) == Int64
+vpop

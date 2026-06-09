@@ -1,6 +1,17 @@
 # VPopMIP.jl
 
-`VPopMIP.jl` is a Julia package for selecting virtual populations (VPops) from plausible QSP simulation outputs using mixed-integer optimization.
+`VPopMIP.jl` is a Julia package for selecting virtual populations (VPops) from QSP simulation outputs using mixed-integer optimization.
+
+## Glossary
+
+The key concept used throughout the package is the Virtual Population.
+
+A Virtual Population (VPop) is an ensemble of QSP model parameterizations generated to capture the observed statistics of the clinical population of interest. A member of a Virtual Population is referred to as a Virtual Patient.
+
+The package is designed around the `VirtualPopulation` object, which stores QSP model simulation results for different drug regimens and clinical endpoints. The package exports two main functions to operate with `VirtualPopulation`:
+
+- `load_vpop` constructs a `VirtualPopulation` object from a DataFrame.
+- `subset_vpop` selects Virtual Patients from a `VirtualPopulation` that best match clinical data and returns the selected subset as another `VirtualPopulation` object.
 
 ## Problem addressed
 
@@ -14,19 +25,15 @@ The goal of generating a Virtual Population (VPop) is to support drug developmen
 
 ## Method
 
-**The method implemented in VPopMIP addresses step 2 (cohort selection)** of the two-step framework described in [2], while step 1 (plausible population generation) is outside the scope of this package. The general outline of the framework is as follows:
+**VPopMIP provides a method for selecting a subset from an existing virtual population so that the selected subset matches clinical data.** In practice, the method chooses a subset of patients from a generated population and optimizes it against reported clinical endpoints data.
 
-1. **Generation of a plausible population**
-The researcher defines ranges and distributions for model parameters and performs simulations using sampled parameter values. Each simulation, together with its corresponding parameter set, is accepted if all model outputs fall within predefined biologically plausible ranges; otherwise, it is rejected. The goal of this step is to generate a large and diverse set of plausible patients.
+The selection problem is formulated as a mixed-integer programming (MIP) problem. Binary variables x_i in {0,1} indicate whether a patient is included in the VPop, subject to a constraint on the desired VPop size. The objective function minimizes the mismatch between simulated and experimental data across multiple clinical endpoints. Since individual patient data are often unavailable, the method focuses on endpoints reported as statistics, such as means, std, quantiles, and survival data.
 
-2. **Selection of a VPop from the plausible population**
-Although the plausible population satisfies biological constraints, it does not necessarily reproduce clinical trial outcomes. The goal of this step is therefore to select a subset of patients that matches reported clinical endpoints.
-This subset selection problem is formulated as a mixed-integer programming (MIP) problem. Binary variables xᵢ ∈ {0,1} indicate whether a plausible patient is included in the VPop, subject to a constraint on the desired VPop size. The objective function minimizes the mismatch between simulated and experimental data across multiple clinical endpoints.
-Since individual patient data are often unavailable, the method focuses on endpoints reported as cohort-level statistics, such as means, std, quantiles, and survival data.
+Details on the mathematical formulation of the objective function terms, corresponding to different types of clinical data, can be found in [DigiPopData package documentation](https://hetalang.github.io/DigiPopData.jl/dev/). 
 
-Details on the mathematical formulation of the objective function terms, corresponding to different types of clinical data, can be found in [DigiPopData package documentation](https://hetalang.github.io/DigiPopData.jl/dev/)
+> The approach corresponds to the selection step of the two-step VPop framework described in [2] but it can be applied to general virtual populations.
 
 ## Citation
 
-1. G. Kolesova, A. Stepanov, G. Lebedeva, and O. Demin, “Application of different approaches to generate virtual patient populations for the quantitative systems pharmacology model of erythropoiesis,” J Pharmacokinet Pharmacodyn, vol. 49, no. 5, pp. 511–524, Oct. 2022, doi:10.1007/s10928-022-09814-y.
-2. N. Braniff et al., “An integrated quantitative systems pharmacology virtual population approach for calibration with oncology efficacy endpoints,” CPT Pharmacom & Syst Pharma, p. psp4.13270, Nov. 2024, doi: 10.1002/psp4.13270.
+1. G. Kolesova, A. Stepanov, G. Lebedeva, and O. Demin, "Application of different approaches to generate virtual patient populations for the quantitative systems pharmacology model of erythropoiesis," J Pharmacokinet Pharmacodyn, vol. 49, no. 5, pp. 511-524, Oct. 2022, doi:10.1007/s10928-022-09814-y.
+2. N. Braniff et al., "An integrated quantitative systems pharmacology virtual population approach for calibration with oncology efficacy endpoints," CPT Pharmacom & Syst Pharma, p. psp4.13270, Nov. 2024, doi: 10.1002/psp4.13270.

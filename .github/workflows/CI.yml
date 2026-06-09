@@ -23,9 +23,8 @@ jobs:
       fail-fast: false
       matrix:
         version:
-          - '1.10'
-          - '1.11'
-          - 'pre'
+          - 'lts' # automatically expands to the LTS release of Julia
+          - '1' # automatically expands to the latest stable 1.x release of Julia   
         os:
           - ubuntu-latest
         arch:
@@ -37,5 +36,7 @@ jobs:
           version: ${{ matrix.version }}
           arch: ${{ matrix.arch }}
       - uses: julia-actions/cache@v2
+      - name: Install unregistered dependencies
+        run: julia --project=. -e 'using Pkg; Pkg.add(PackageSpec(url="https://github.com/hetalang/DigiPopData.jl")); Pkg.instantiate()'
       - uses: julia-actions/julia-buildpkg@v1
       - uses: julia-actions/julia-runtest@v1

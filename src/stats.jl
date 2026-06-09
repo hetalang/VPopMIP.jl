@@ -12,19 +12,19 @@ function statistics_summary(vpop::VirtualPopulation, data::AbstractVector)
     scn = d.scenario
     ept = d.endpoint
     sim = Vector(grpop[(scn,)][!, ept])
-    stats_d = compute_statistics(sim, d.metric)
+    stats_d = statistics_summary(sim, d.metric)
     push!(stats, (;scenario=scn, endpoint=ept, stats=stats_d))
   end
   return stats
 end
 
 """
-    compute_statistics(vpop::VirtualPopulation, data::DigiPopData.MetricBinding)
+    statistics_summary(vpop::VirtualPopulation, data::DigiPopData.MetricBinding)
 
 Compute statistics for a given Virtual Population based on the provided metric binding.
 Returns a dictionary containing the computed statistics.
 """
-function compute_statistics(vpop::VirtualPopulation, data::DigiPopData.MetricBinding)
+function statistics_summary(vpop::VirtualPopulation, data::DigiPopData.MetricBinding)
   scn = data.scenario
   ept = data.endpoint
 
@@ -33,28 +33,28 @@ function compute_statistics(vpop::VirtualPopulation, data::DigiPopData.MetricBin
 
   return Dict(
       scn => Dict(
-          ept => compute_statistics(sim, data.metric)
+          ept => statistics_summary(sim, data.metric)
       )
   )
 end
 
-function compute_statistics(sim::AbstractVector, metric::DigiPopData.SurvivalMetric)
+function statistics_summary(sim::AbstractVector, metric::DigiPopData.SurvivalMetric)
   vpnum = length(sim)
   times = metric.values
   yvpop = [survival_num_to_pct(count(x->x<=t, sim),vpnum) for t in times]
   return Dict(:times => times, :survival => yvpop)
 end
 
-compute_statistics(sim::AbstractVector, metric::DigiPopData.MeanMetric) = Dict(
+statistics_summary(sim::AbstractVector, metric::DigiPopData.MeanMetric) = Dict(
   :mean => mean(skipmissing(sim))
 )
 
-compute_statistics(sim::AbstractVector, metric::DigiPopData.MeanSDMetric) = Dict(
+statistics_summary(sim::AbstractVector, metric::DigiPopData.MeanSDMetric) = Dict(
     :mean => mean(skipmissing(sim)),
     :std => std(skipmissing(sim))
 )
 
-compute_statistics(sim::AbstractVector, metric::DigiPopData.QuantileMetric) = Dict(
+statistics_summary(sim::AbstractVector, metric::DigiPopData.QuantileMetric) = Dict(
     :quantiles => quantile(skipmissing(sim), metric.levels)
 )
 

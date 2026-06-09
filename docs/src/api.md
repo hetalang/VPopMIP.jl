@@ -5,9 +5,8 @@
 ```@docs
 VPopMIP.VirtualPopulation
 load_vpop
-select_cohort
+subset_vpop
 statistics_summary
-compute_statistics
 scenarios
 endpoints
 objective_value
