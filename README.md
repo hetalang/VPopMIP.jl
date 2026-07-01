@@ -1,6 +1,6 @@
 # VPopMIP.jl
 
-`VPopMIP.jl` selects a subset from a larger virtual population using mixed-integer optimization.
+`VPopMIP.jl` selects a subset from a larger virtual population using mixed-integer optimization. See the [documentation](https://hetalang.github.io/VPopMIP.jl/dev) for usage, examples, and API details.
 
 [![Build Status](https://github.com/hetalang/VPopMIP.jl/actions/workflows/CI.yml/badge.svg?branch=master)](https://github.com/hetalang/VPopMIP.jl/actions/workflows/CI.yml?query=branch%3Amaster)
 [![Dev](https://img.shields.io/badge/docs-dev-blue.svg)](https://hetalang.github.io/VPopMIP.jl/dev)
